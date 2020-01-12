@@ -1,22 +1,33 @@
 
 var matrix = [
-  [ 0,  1,  2,  3],
-  [ 4,  5,  6,  7],
-  [ 8,  9, 10, 11],
+  [0, 1, 2, 3],
+  [4, 5, 6, 7],
+  [8, 9, 10, 11],
   [12, 13, 14, 15],
 ];
 
-// var td = d3.selectAll("tbody tr").selectAll("td");
 
-var td = d3.selectAll("tbody tr")
+const update = () => {
+  var tr = d3.select("table tbody").selectAll("tr")
     .data(matrix)
-  .selectAll("td")
-    .data(function(d, i) { return d; }); // d is matrix[i]
+    .enter().append("tr");
 
-// td.style("color", function(d, i, j) { 
-//   console.log('d', d);
-//   console.log('i', i)
-//   console.log('j', j)
-//   return i || j ? null : "red"; 
-// });
+  var td = tr.selectAll("td")
+    .data(function (d) { return d; })
+    .enter().append("td")
+    .text(d => d)
+}
+
+window.addEventListener("click", () => {
+  matrix.push([6,7,8,9])
+  update()
+})
+
+update()
+
+
+
+
+
+
 
