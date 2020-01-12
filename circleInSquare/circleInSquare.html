@@ -13,6 +13,21 @@
 		<link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
 
+		<style>
+
+		
+				
+				form {
+					position: absolute;
+					right: 10px;
+					top: 10px;
+					z-index: 9999999;
+					opacity: 0;;
+				}
+				
+				</style>
+
+
 		
 
   </head>
@@ -21,11 +36,17 @@
   <!-- style="margin: 0px; padding: 0px; display: flex; height: 100%" -->
   <body 
   style="margin: 0px; padding: 0px; display: flex; height: 100%"
-  >
+	>
+	<form>
+			<label><input type="radio" name="dataset" value="apples" checked> Apples</label>
+			<label><input type="radio" name="dataset" value="oranges"> Oranges</label>
+		</form>
 
-      <svg id="crack" background="black" style="background: black; margin: auto" width="90%" height="90%"/> </svg>
+      <svg id="crack" background="black" style="background: black; margin: auto; border: 0px solid yellow; box-sizing: border-box" width="90%" height="90%"/> </svg>
 			<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="./circleInSquare2.js" charset="utf-8"></script>
+			<!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
+		<script src="./circleInSquare2.js" charset="utf-8"></script>
+		<!-- <script src="./pacman.js" charset="utf-8"></script> -->
 
 	</body>
 
