@@ -1,6 +1,6 @@
 // Fire when DOM is available
 const numRows = 28;
-const numCols = 24
+const numCols = 21
 
 let svg;
 let cellHeight = 100 / numRows;
@@ -152,14 +152,11 @@ domReady(function () {
     const width = cellWidth * xAxis;
 
     while ((cellWidth * xAxis) <= 100 && (cellHeight * yAxis) <= 100) {
-      // borderDataHorizontal.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
       let hasBorder = false;
       borderDataHorizontal.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
 
       if ((xAxis >= borderTopXstart && xAxis <= borserTopXend)) {
-        // borderDataHorizontal.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
-        // arr.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
-        hasBorder = true;
+        // hasBorder = true;
       } else {
 
       }
@@ -185,18 +182,15 @@ domReady(function () {
     let arr = []
     while ((cellWidth * xAxis) <= 100 && (cellHeight * yAxis) <= 100) {
       let hasBorder = false;
-      // hasBorder = true;
-      // borderDataHorizontal.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
-      // borderDataVertical.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
       if ((yAxis >= borderYstart && yAxis <= borderYend)) {
-        hasBorder = true;
+        // hasBorder = true;
       } else {
 
       }
       arr.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis, hasBorder })
       yAxis += 1
 
-      if (cellHeight * yAxis >= 100) {
+      if (cellHeight * yAxis > 100) {
         borderDataVerticalMatrix.push(arr)
         
         arr = [];
@@ -208,72 +202,76 @@ domReady(function () {
   }
 
   createBorderHorizontal()
+  const borderXobj = [
+    {y: 0, startX: 0, endX: numCols},
+    {y: 1, startX: 1, endX: 4},
+    {y: 1, startX: 5, endX: 9},
+    {y: 1, startX: 12, endX: 16},
+    {y: 3, startX: 12, endX: 16},
+
+
+    {y: 1, startX: 17, endX: 20},
+    {y: 3, startX: 17, endX: 20},
+
+    // {y: 1, startX: 25, endX: 27},
+    {y: 3, startX: 1, endX: 4},
+    {y: 3, startX: 5, endX: 9},
+
+    {y: 3, startX: 10, endX: 11},
+
+    // {y: 3, startX: 13, endX: 15},
+    // {y: 3, startX: 18, endX: 23},
+    {y: 5, startX: 1, endX: 4},
+    {y: 6, startX: 1, endX: 4},
+
+    {y: numRows, startX: 0, endX: numCols},
+  ]
+
+  borderXobj.forEach(border => {
+    const row = borderDataHorizontalMatrix[border.y]
+
+    for(let i = border.startX; i < border.endX; i++) {
+      row[i].hasBorder = true;
+    }
+    console.log('row', row)
+
+  })
+
+
+  // console.log('borderDataHorizontalMatrix', borderDataHorizontalMatrix)
   createBorderVertical()
-  borderDataHorizontalMatrix.forEach(row => {
-    row.forEach((piece, i) => {
-      if (!piece.hasBorder) return;
-      if (!row[i + 1]) { return }
-      d3.select("#crack").append("line")
-        .attr("x1", `${piece.x}%`)
-        .attr("y1", `${piece.y}%`)
-        .attr("x2", `${row[i + 1].x}%`)
-        .attr("y2", `${piece.y}%`)
-        .attr("stroke-width", 5)
-        .attr("stroke", "white")
-    })
+  const borderYobj = [
+    {x: 0, startY: 0, endY: 8},
+    {x: 0, startY: 13, endY: numRows},
+
+    {x: numCols, startY: 0, endY: 8},
+    {x: numCols, startY: 13, endY: numRows},
+
+
+    {x: 1, startY: 1, endY: 2},
+    {x: 4, startY: 1, endY: 2},
+    {x: 5, startY: 1, endY: 2},
+    {x: 9, startY: 1, endY: 2},
+    {x: 10, startY: 0, endY: 2},
+    {x: 11, startY: 0, endY: 2},
+    {x: 12, startY: 1, endY: 2},
+    {x: 16, startY: 1, endY: 2},
+    {x: 17, startY: 1, endY: 2},
+    {x: 20, startY: 1, endY: 2},
+  ]
+
+  borderYobj.forEach(border => {
+    const row = borderDataVerticalMatrix[border.x]
+
+    for(let i = border.startY; i <= border.endY; i++) {
+      row[i].hasBorder = true;
+    }
+    console.log('row', row)
+
   })
 
-  borderDataVerticalMatrix.forEach(row => {
-    row.forEach((piece, i) => {
-      if (!piece.hasBorder) return;
-      if (!row[i + 1]) { return }
-      d3.select("#crack").append("line")
-        .attr("x1", `${piece.x}%`)
-        .attr("y1", `${piece.y}%`)
-        .attr("x2", `${piece.x}%`)
-        .attr("y2", `${row[i + 1].y}%`)
-        .attr("stroke-width", 5)
-        .attr("stroke", "white")
-    })
-  })
 
-  //   borderDataVertical.forEach((piece, i) => {
-  //     console.log('i', i)
-  //     // if(piece.rowX <= 5) {return}
-  //     if(!borderDataVertical[i+1]) {return}
-  //     console.log('piece', piece)
-  // //     d3.select("#crack").append("line")
-  // // .attr("x1", `${piece.x}%`)
-  // // .attr("y1", `${piece.y}%`)
-  // // .attr("x2", `${borderData[i+1].x}%`)
-  // // .attr("y2", `${piece.y}%`)
-  // // .attr("stroke-width", 5)
-  // // .attr("stroke", "white")
-  // // .attr('transform', `translate(0, ${elementSize.height * (cellHeight/200)})`)
-
-
-  // d3.select("#crack").append("line")
-  // .attr("x1", `${piece.x}%`)
-  // .attr("y1", `${piece.y}%`)
-  // .attr("x2", `${piece.x}%`)
-  // .attr("y2", `${borderDataVertical[i+1].y}%`)
-  // .attr("stroke-width", 5)
-  // .attr("stroke", "white")
-  // // .attr('transform', `translate(${elementSize.width * (cellWidth/200)}, 0)`)
-
-
-  //   })
-
-
-
-  // var line = d3.select("#crack").append("line")
-  // .attr("x1", 0)
-  // .attr("y1", `${cellHeight/2}%`)
-  // .attr("x2", '100%')
-  // .attr("y2", `${cellHeight/2}%`)
-  // .attr("stroke-width", 5)
-  // .attr("stroke", "white")
-  // .attr("transform", `translate(0, ${cellHeight*elementSize.height/200})`)
+  
 
   window.addEventListener("resize", () => {
     const elementSize = document.getElementById("crack").getBoundingClientRect();
@@ -329,6 +327,36 @@ domReady(function () {
       .attr('cy', d => '50%')
       .attr('r', d => `${circleRadius}%`)
       .style("fill", "blue")
+
+
+
+      borderDataHorizontalMatrix.forEach(row => {
+        row.forEach((piece, i) => {
+          if (!piece.hasBorder) return;
+          if (!row[i + 1]) { return }
+          d3.select("#crack").append("line")
+            .attr("x1", `${piece.x}%`)
+            .attr("y1", `${piece.y}%`)
+            .attr("x2", `${row[i + 1].x}%`)
+            .attr("y2", `${piece.y}%`)
+            .attr("stroke-width", 5)
+            .attr("stroke", "green")
+        })
+      })
+    
+      borderDataVerticalMatrix.forEach(row => {
+        row.forEach((piece, i) => {
+          if (!piece.hasBorder) return;
+          if (!row[i + 1]) { return }
+          d3.select("#crack").append("line")
+            .attr("x1", `${piece.x}%`)
+            .attr("y1", `${piece.y}%`)
+            .attr("x2", `${piece.x}%`)
+            .attr("y2", `${row[i + 1].y}%`)
+            .attr("stroke-width", 5)
+            .attr("stroke", "green")
+        })
+      })
 
 
   }
@@ -512,21 +540,21 @@ domReady(function () {
         // console.log(
         //   'hasBorder', borderDataVerticalMatrix[x-1][y].hasBorder
         // )
-        if (!borderDataVerticalMatrix[x-1] || borderDataVerticalMatrix[x-1][y].hasBorder) {
+        if (!borderDataVerticalMatrix[x] || borderDataVerticalMatrix[x][y].hasBorder) {
           return clearInterval(mouthInterval);
         }
           pacManGridCoords.x -= 1
           tealCircleData[0].x -= cellWidth
           if (tealCircleData[0].x <= 0) {
             clearInterval(mouthInterval)
-            tealCircleData[0].x = 0
+            tealCircleData[0].x = 100
           }
           break;
         case 38:
           console.log(
-            'hasBorder', borderDataHorizontalMatrix[y - 1][x].hasBorder
+            'hasBorder', borderDataHorizontalMatrix[y][x].hasBorder
           )
-          if (borderDataHorizontalMatrix[y - 1][x].hasBorder) {
+          if (borderDataHorizontalMatrix[y][x].hasBorder) {
             return clearInterval(mouthInterval);
           }
           pacManGridCoords.y -= 1
@@ -537,17 +565,20 @@ domReady(function () {
           }
           break;
         case 39:
-        console.log(
-          'hasBorder', borderDataVerticalMatrix[x+1][y].hasBorder
-        )
-        if (borderDataVerticalMatrix[x+1][y].hasBorder) {
+        // console.log(
+        //   'hasBorder', borderDataVerticalMatrix[x+1][y].hasBorder
+        // )
+        if (!borderDataVerticalMatrix[x+1] || borderDataVerticalMatrix[x+1][y].hasBorder) {
           return clearInterval(mouthInterval);
-        }
+        } 
           pacManGridCoords.x += 1
           tealCircleData[0].x += cellWidth
-          if (tealCircleData[0].x >= 100) {
+          console.log('tealCircleData[0]', tealCircleData[0])
+          if (pacManGridCoords.x >= numCols) {
+            console.log("HEY")
+          // if (tealCircleData[0].x >= 100) {
             clearInterval(mouthInterval)
-            tealCircleData[0].x = 100 - cellWidth
+            tealCircleData[0].x = 0
           }
           break;
         case 40:
