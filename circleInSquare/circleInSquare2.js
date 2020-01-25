@@ -1,6 +1,8 @@
+
 // Fire when DOM is available
-const numRows = 28;
-const numCols = 24
+const numRows = 19;
+const numCols = 17;
+let score = 0;
 
 let svg;
 let cellHeight = 100 / numRows;
@@ -74,17 +76,58 @@ var domReady = function (callback) {
 
 
 
-const noCircleCoords = [
-]
 
+const generateNoCircleCoords = () => {
 
-
-for(let x=5; x<15; x++) {
-
-  for(let y=3; y<8; y++) {
-    noCircleCoords.push({x, y})
+const noCircleCoords = [];
+const addNoCircleCoords = (xStart, yStart, xEnd, yEnd) => {
+  for(let x=xStart; x<=xEnd; x++) {
+    for(let y=yStart; y<=yEnd; y++) {
+      noCircleCoords.push({x, y})
+    }
   }
+  
 }
+
+addNoCircleCoords(1, 1, 2, 2)
+addNoCircleCoords(4, 1, 6, 2)
+addNoCircleCoords(8, 0, 8, 2)
+addNoCircleCoords(10, 1, 12, 2)
+addNoCircleCoords(14, 1, 15, 2)
+addNoCircleCoords(1, 4, 2, 5)
+addNoCircleCoords(4, 4, 4, 8)
+addNoCircleCoords(5, 6, 6, 6)
+addNoCircleCoords(5, 4, 10, 4)
+addNoCircleCoords(8, 5, 8, 6)
+addNoCircleCoords(10, 6, 12, 6)
+addNoCircleCoords(12, 4, 12, 8)
+addNoCircleCoords(14, 4, 15, 5)
+addNoCircleCoords(0, 7, 2, 8)
+addNoCircleCoords(6, 8, 10, 10)
+addNoCircleCoords(14, 7, 16, 8)
+addNoCircleCoords(0, 10, 2, 11)
+addNoCircleCoords(4, 10, 4, 14)
+addNoCircleCoords(5, 12, 6, 12)
+addNoCircleCoords(6, 14, 10, 14)
+addNoCircleCoords(8, 12, 8, 13)
+addNoCircleCoords(10, 12, 12, 12)
+addNoCircleCoords(12, 10, 12, 14)
+addNoCircleCoords(14, 10, 16, 11)
+addNoCircleCoords(1, 13, 2, 14)
+addNoCircleCoords(1, 16, 2, 17)
+addNoCircleCoords(4, 16, 6, 17)
+addNoCircleCoords(8, 16, 8, 18)
+addNoCircleCoords(10, 16, 12, 17)
+addNoCircleCoords(14, 13, 16, 14)
+addNoCircleCoords(14, 16, 16, 17)
+
+return noCircleCoords
+
+}
+
+
+
+const noCircleCoords = generateNoCircleCoords();
 
 const createRectData = () => {
   let xAxis = 0;
@@ -96,14 +139,10 @@ const createRectData = () => {
   let count = 0;
   while ((cellWidth * xAxis + 1) <= 100 && (cellHeight * yAxis + 1) <= 100) {
     count++
-
-
     arr.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, count })
-    // rectData.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, count })
     const shouldAddCircle = noCircleCoords.findIndex(coords => coords.x === xAxis && coords.y === yAxis)
     if(shouldAddCircle === -1) {
-      // arr.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, count })
-      rectData.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, count })
+      rectData.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, count, xAxis, yAxis })
     }
     
 
@@ -119,15 +158,23 @@ const createRectData = () => {
 }
 
 createRectData()
+const specialCoords = [
+  {xAxis: 0, yAxis: 3},
+  {xAxis: numCols-1, yAxis: 3},
+  {xAxis: 0, yAxis: 15},
+  {xAxis: numCols-1, yAxis: 15},
 
+]
 
-
+specialCoords.forEach(coordPair => {
+  const specialCircle = rectData.find(e => e.xAxis === coordPair.xAxis && e.yAxis === coordPair.yAxis);
+  if(specialCircle) {
+    specialCircle.special = true;
+  }
+  
+})
 
 domReady(function () {
-
-  
-
-
 
   const elementSize = document.getElementById("crack").getBoundingClientRect();
   const diameter = elementSize.width < elementSize.height ? elementSize.width : elementSize.height;
@@ -152,18 +199,8 @@ domReady(function () {
     const width = cellWidth * xAxis;
 
     while ((cellWidth * xAxis) <= 100 && (cellHeight * yAxis) <= 100) {
-      // borderDataHorizontal.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
       let hasBorder = false;
       borderDataHorizontal.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
-
-      if ((xAxis >= borderTopXstart && xAxis <= borserTopXend)) {
-        // borderDataHorizontal.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
-        // arr.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
-        hasBorder = true;
-      } else {
-
-      }
-
       arr.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis, hasBorder })
       xAxis += 1
 
@@ -185,18 +222,10 @@ domReady(function () {
     let arr = []
     while ((cellWidth * xAxis) <= 100 && (cellHeight * yAxis) <= 100) {
       let hasBorder = false;
-      // hasBorder = true;
-      // borderDataHorizontal.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
-      // borderDataVertical.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis })
-      if ((yAxis >= borderYstart && yAxis <= borderYend)) {
-        hasBorder = true;
-      } else {
-
-      }
       arr.push({ x: cellWidth * xAxis, y: cellHeight * yAxis, rowX: xAxis, colY: yAxis, hasBorder })
       yAxis += 1
 
-      if (cellHeight * yAxis >= 100) {
+      if (cellHeight * yAxis > 100) {
         borderDataVerticalMatrix.push(arr)
         
         arr = [];
@@ -208,72 +237,199 @@ domReady(function () {
   }
 
   createBorderHorizontal()
+  const borderXobj = [
+    {y: 0, startX: 0, endX: numCols},
+
+    {y: 1, startX: 1, endX: 3},
+    {y: 3, startX: 1, endX: 3},
+
+
+
+    {y: 1, startX: 4, endX: 7},
+    {y: 3, startX: 4, endX: 7},
+
+    {y: 1, startX: 10, endX: 13},
+    {y: 3, startX: 10, endX: 13},
+
+    {y: 4, startX: 12, endX: 13},
+    {y: 9, startX: 12, endX: 13},
+
+    {y: 6, startX: 10, endX: 12},
+    {y: 7, startX: 10, endX: 12},
+
+    {y: 7, startX: 0, endX: 3},
+    {y: 9, startX: 0, endX: 3},
+
+    {y: 10, startX: 0, endX: 3},
+    {y: 12, startX: 0, endX: 3},
+
+    {y: 13, startX: 1, endX: 3},
+    {y: 15, startX: 1, endX: 3},
+    {y: 16, startX: 1, endX: 3},
+    {y: 18, startX: 1, endX: 3},
+
+
+    {y: 16, startX: 4, endX: 7},
+    {y: 18, startX: 4, endX: 7},
+
+    {y: 16, startX: 14, endX: 16},
+    {y: 18, startX: 14, endX: 16},
+   
+    {y: 15, startX: 6, endX: 11},
+    {y: 14, startX: 6, endX: 8},
+    {y: 14, startX: 9, endX: 11},
+
+    {y: 12, startX: 8, endX: 9},
+
+
+    
+
+
+    {y: 3, startX: 8, endX: 9},
+
+
+    {y: 4, startX: 1, endX: 3},
+    {y: 6, startX: 1, endX: 3},
+
+    {y: 4, startX: 4, endX: 5},
+    {y: 9, startX: 4, endX: 5},
+
+    {y: 6, startX: 5, endX: 7},
+    {y: 7, startX: 5, endX: 7},
+    
+    {y: 4, startX: 6, endX: 11},
+    {y: 5, startX: 6, endX: 8},
+    {y: 5, startX: 9, endX: 11},
+
+    {y: 7, startX: 8, endX: 9},
+
+    {y: 4, startX: 15, endX: 16},
+
+    {y: 7, startX: 14, endX: 18},
+    {y: 9, startX: 14, endX: 18},
+
+    {y: 10, startX: 14, endX: 18},
+    {y: 12, startX: 14, endX: 18},
+
+
+    {y: 1, startX: 14, endX: 16},
+    {y: 3, startX: 14, endX: 16},
+
+    {y: 4, startX: 14, endX: 16},
+    {y: 6, startX: 14, endX: 16},
+
+
+    {y: 8, startX: 6, endX: 11},
+    {y: 11, startX: 6, endX: 11},
+
+
+    {y: 10, startX: 4, endX: 5},
+    {y: 15, startX: 4, endX: 5},
+
+    {y: 12, startX: 5, endX: 7},
+    {y: 13, startX: 5, endX: 7},
+
+    {y: 13, startX: 14, endX: 16},
+    {y: 15, startX: 14, endX: 16},
+
+    {y: 16, startX: 10, endX: 13},
+    {y: 18, startX: 10, endX: 13},
+
+    {y: 10, startX: 12, endX: 13},
+    {y: 15, startX: 12, endX: 13},
+
+    {y: 12, startX: 10, endX: 12},
+    {y: 13, startX: 10, endX: 12},
+
+    {y: 16, startX: 8, endX: 9},
+
+
+
+    {y: numRows, startX: 0, endX: numCols},
+  ]
+
+  borderXobj.forEach(border => {
+    const row = borderDataHorizontalMatrix[border.y]
+
+    for(let i = border.startX; i < border.endX; i++) {
+      row[i].hasBorder = true;
+    }
+  })
+
   createBorderVertical()
-  borderDataHorizontalMatrix.forEach(row => {
-    row.forEach((piece, i) => {
-      if (!piece.hasBorder) return;
-      if (!row[i + 1]) { return }
-      d3.select("#crack").append("line")
-        .attr("x1", `${piece.x}%`)
-        .attr("y1", `${piece.y}%`)
-        .attr("x2", `${row[i + 1].x}%`)
-        .attr("y2", `${piece.y}%`)
-        .attr("stroke-width", 5)
-        .attr("stroke", "white")
-    })
+  const borderYobj = [
+    {x: 0, startY: 0, endY: 6},
+    {x: 0, startY: 12, endY: numRows},
+    {x: 3, startY: 7, endY: 8},
+    {x: 3, startY: 10, endY: 11},
+    {x: numCols, startY: 0, endY: 6},
+    {x: numCols, startY: 12, endY: numRows},
+    {x: 1, startY: 1, endY: 2},
+    {x: 3, startY: 1, endY: 2},
+    {x: 1, startY: 13, endY: 14},
+    {x: 3, startY: 13, endY: 14},
+    {x: 1, startY: 16, endY: 17},
+    {x: 3, startY: 16, endY: 17},
+    {x: 4, startY: 16, endY: 17},
+    {x: 7, startY: 16, endY: 17},
+    {x: 4, startY: 1, endY: 2},
+    {x: 7, startY: 1, endY: 2},
+    {x: 8, startY: 0, endY: 2},
+    {x: 9, startY: 0, endY: 2},
+    {x: 10, startY: 1, endY: 2},
+    {x: 13, startY: 1, endY: 2},
+    {x: 13, startY: 4, endY: 8},
+    {x: 12, startY: 4, endY: 5},
+    {x: 12, startY: 7, endY: 8},
+    {x: 10, startY: 6, endY: 6},
+    {x: 8, startY: 12, endY: 13},
+    {x: 9, startY: 12, endY: 13},
+    {x: 6, startY: 14, endY: 14},
+    {x: 11, startY: 14, endY: 14},
+    {x: 4, startY: 10, endY: 14},
+    {x: 5, startY: 10, endY: 11},
+    {x: 5, startY: 13, endY: 14},
+    {x: 7, startY: 12, endY: 12},
+    {x: 14, startY: 1, endY: 2},
+    {x: 16, startY: 1, endY: 2},
+    {x: 14, startY: 4, endY: 5},
+    {x: 16, startY: 4, endY: 5},
+    {x: 14, startY: 16, endY: 17},
+    {x: 16, startY: 16, endY: 17},
+    {x: 1, startY: 4, endY: 5},
+    {x: 3, startY: 4, endY: 5},
+    {x: 4, startY: 4, endY: 8},
+    {x: 5, startY: 4, endY: 5},
+    {x: 5, startY: 7, endY: 8},
+    {x: 6, startY: 4, endY: 4},
+    {x: 7, startY: 6, endY: 6},
+    {x: 11, startY: 4, endY: 4},
+    {x: 8, startY: 5, endY: 6},
+    {x: 9, startY: 5, endY: 6},
+    {x: 6, startY: 8, endY: 10},
+    {x: 11, startY: 8, endY: 10},
+    {x: 14, startY:7, endY:8},
+    {x: 14, startY:10, endY:11},
+    {x: 14, startY:13, endY:14},
+    {x: 16, startY:13, endY:14},
+    {x: 10, startY:16, endY:17},
+    {x: 13, startY:16, endY:17},
+    {x: 13, startY:10, endY:14},
+    {x: 12, startY:10, endY:11},
+    {x: 12, startY:13, endY:14},
+    {x: 10, startY: 12, endY:12},
+    {x: 8, startY: 16, endY:numRows},
+    {x: 9, startY: 16, endY:numRows},
+  ]
+
+  borderYobj.forEach(border => {
+    const row = borderDataVerticalMatrix[border.x]
+
+    for(let i = border.startY; i <= border.endY; i++) {
+      row[i].hasBorder = true;
+    }
+
   })
-
-  borderDataVerticalMatrix.forEach(row => {
-    row.forEach((piece, i) => {
-      if (!piece.hasBorder) return;
-      if (!row[i + 1]) { return }
-      d3.select("#crack").append("line")
-        .attr("x1", `${piece.x}%`)
-        .attr("y1", `${piece.y}%`)
-        .attr("x2", `${piece.x}%`)
-        .attr("y2", `${row[i + 1].y}%`)
-        .attr("stroke-width", 5)
-        .attr("stroke", "white")
-    })
-  })
-
-  //   borderDataVertical.forEach((piece, i) => {
-  //     console.log('i', i)
-  //     // if(piece.rowX <= 5) {return}
-  //     if(!borderDataVertical[i+1]) {return}
-  //     console.log('piece', piece)
-  // //     d3.select("#crack").append("line")
-  // // .attr("x1", `${piece.x}%`)
-  // // .attr("y1", `${piece.y}%`)
-  // // .attr("x2", `${borderData[i+1].x}%`)
-  // // .attr("y2", `${piece.y}%`)
-  // // .attr("stroke-width", 5)
-  // // .attr("stroke", "white")
-  // // .attr('transform', `translate(0, ${elementSize.height * (cellHeight/200)})`)
-
-
-  // d3.select("#crack").append("line")
-  // .attr("x1", `${piece.x}%`)
-  // .attr("y1", `${piece.y}%`)
-  // .attr("x2", `${piece.x}%`)
-  // .attr("y2", `${borderDataVertical[i+1].y}%`)
-  // .attr("stroke-width", 5)
-  // .attr("stroke", "white")
-  // // .attr('transform', `translate(${elementSize.width * (cellWidth/200)}, 0)`)
-
-
-  //   })
-
-
-
-  // var line = d3.select("#crack").append("line")
-  // .attr("x1", 0)
-  // .attr("y1", `${cellHeight/2}%`)
-  // .attr("x2", '100%')
-  // .attr("y2", `${cellHeight/2}%`)
-  // .attr("stroke-width", 5)
-  // .attr("stroke", "white")
-  // .attr("transform", `translate(0, ${cellHeight*elementSize.height/200})`)
 
   window.addEventListener("resize", () => {
     const elementSize = document.getElementById("crack").getBoundingClientRect();
@@ -281,7 +437,6 @@ domReady(function () {
     circleRadius = diameter / 80
     update()
   });
-
 
 
   const update = () => {
@@ -296,16 +451,12 @@ domReady(function () {
     const circles = d3.select("#crack").selectAll(".circle").data(rectData, (d) => d.count)
       .attr('cx', d => '50%')
       .attr('cy', d => '50%')
-      .attr('r', d => `${circleRadius}%`)
+      .attr('r', d => `${!d.special ? circleRadius : circleRadius * 2}%`)
+      .classed('special', d => d.special)
       .style("fill", "blue")
 
     selection.exit().remove();
     circles.exit()
-      .style("fill", "yellow")
-      .transition()
-      .style("opacity", 0)
-      .duration(150)
-      // .delay(25)
       .remove();
 
 
@@ -327,13 +478,57 @@ domReady(function () {
       .classed("circle", true)
       .attr('cx', d => '50%')
       .attr('cy', d => '50%')
-      .attr('r', d => `${circleRadius}%`)
+      .attr('r', d => `${!d.special ? circleRadius : circleRadius * 2}%`)
+      .classed('special', d => d.special)
       .style("fill", "blue")
+      // .style("fill", "#3C12CA")
 
 
+
+      borderDataHorizontalMatrix.forEach(row => {
+        row.forEach((piece, i) => {
+          if (!piece.hasBorder) return;
+          if (!row[i + 1]) { return }
+          d3.select("#crack").append("line")
+            .attr("x1", `${piece.x}%`)
+            .attr("y1", `${piece.y}%`)
+            .attr("x2", `${row[i + 1].x}%`)
+            .attr("y2", `${piece.y}%`)
+            .attr("stroke-width", 5)
+            // .attr("stroke", "#56CCCA")
+            .attr("stroke", "#C7CC56")
+        })
+      })
+    
+      borderDataVerticalMatrix.forEach(row => {
+        row.forEach((piece, i) => {
+          if (!piece.hasBorder) return;
+          if (!row[i + 1]) { return }
+          d3.select("#crack").append("line")
+            .attr("x1", `${piece.x}%`)
+            .attr("y1", `${piece.y}%`)
+            .attr("x2", `${piece.x}%`)
+            .attr("y2", `${row[i + 1].y}%`)
+            .attr("stroke-width", 5)
+            // .attr("stroke", "#56CCCA")
+            // .attr("stroke", "#F66553")
+            .attr("stroke", "#C7CC56")
+        })
+      })
+
+document.getElementById('score').innerText=score
   }
 
   update()
+  const specialDots = document.querySelectorAll('.special')
+  // console.log('sepcial dots', specialDots)
+  let blah =5
+    setInterval(() => {
+      // const specialDots = document.querySelectorAll('.special')
+      specialDots.forEach(dot => {
+      dot.style.opacity == .2 ?  dot.style.opacity = 1 : dot.style.opacity = .2
+    })
+  }, 300)
 
 
   function arcTween(a) {
@@ -353,7 +548,7 @@ domReady(function () {
 
       return d3.select("input[value=\"apples\"]").property("checked", true).each(change);
 
-    }, 200);
+    }, 195);
 
   }
 
@@ -391,7 +586,6 @@ domReady(function () {
 
     halfCircleData[0] += 1
     halfCircleData[1] += 1
-    var color = d3.scale.category20();
 
     arc = d3.svg.arc()
       .innerRadius(0)
@@ -407,7 +601,6 @@ domReady(function () {
       .endAngle(1.5 * Math.PI)
       .value(function (d) { return d.apples; })
       .sort(null);
-
 
     let halfCircle = mainSvg.selectAll('.halfCirlce').data(halfCircleData)
 
@@ -488,9 +681,6 @@ domReady(function () {
   pacmanUpdate()
 
   setInterval(function () {
-    // console.log('borderDataHorizontal', borderDataHorizontal)
-    // console.log('borderDataHorizontalMatrix', borderDataHorizontalMatrix)
-
     switch (currentKeyCode) {
       case 37:
       case 38:
@@ -507,59 +697,50 @@ domReady(function () {
 
       switch (currentKeyCode) {
         case 37:
-        console.log('left')
-        console.log('borderDataVerticalMatrix', borderDataVerticalMatrix)
-        // console.log(
-        //   'hasBorder', borderDataVerticalMatrix[x-1][y].hasBorder
-        // )
-        if (!borderDataVerticalMatrix[x-1] || borderDataVerticalMatrix[x-1][y].hasBorder) {
+        if ( borderDataVerticalMatrix[x][y].hasBorder) {
+          d3.select("input[value=\"apples\"]").property("checked", true).each(change);
           return clearInterval(mouthInterval);
         }
           pacManGridCoords.x -= 1
           tealCircleData[0].x -= cellWidth
-          if (tealCircleData[0].x <= 0) {
-            clearInterval(mouthInterval)
-            tealCircleData[0].x = 0
+          if(pacManGridCoords.x < 0) {
+            tealCircleData[0].x = 100
+            pacManGridCoords.x = numCols
           }
           break;
         case 38:
-          console.log(
-            'hasBorder', borderDataHorizontalMatrix[y - 1][x].hasBorder
-          )
-          if (borderDataHorizontalMatrix[y - 1][x].hasBorder) {
+          if (borderDataHorizontalMatrix[y][x].hasBorder) {
+            d3.select("input[value=\"apples\"]").property("checked", true).each(change);
             return clearInterval(mouthInterval);
           }
           pacManGridCoords.y -= 1
           tealCircleData[0].y -= cellHeight
           if (tealCircleData[0].y <= 0) {
+            d3.select("input[value=\"apples\"]").property("checked", true).each(change);
             clearInterval(mouthInterval)
             tealCircleData[0].y = 0
           }
           break;
         case 39:
-        console.log(
-          'hasBorder', borderDataVerticalMatrix[x+1][y].hasBorder
-        )
         if (borderDataVerticalMatrix[x+1][y].hasBorder) {
+          d3.select("input[value=\"apples\"]").property("checked", true).each(change);
           return clearInterval(mouthInterval);
-        }
+        } 
           pacManGridCoords.x += 1
           tealCircleData[0].x += cellWidth
-          if (tealCircleData[0].x >= 100) {
+          if (pacManGridCoords.x >= numCols) {
             clearInterval(mouthInterval)
-            tealCircleData[0].x = 100 - cellWidth
+            tealCircleData[0].x = 0
+            pacManGridCoords.x = 0
           }
           break;
         case 40:
-          console.log(
-            'hasBorder', borderDataHorizontalMatrix[y + 1][x].hasBorder
-          )
           if (borderDataHorizontalMatrix[y + 1][x].hasBorder) {
             return clearInterval(mouthInterval);
           }
           pacManGridCoords.y += 1
           tealCircleData[0].y += cellHeight
-          if (tealCircleData[0].y >= 100) {
+          if (tealCircleData[0].y > 100) {
             clearInterval(mouthInterval)
             tealCircleData[0].y = 100 - cellHeight
           }
@@ -574,16 +755,17 @@ domReady(function () {
       if (pacManGridCoords.y < 0) {
         pacManGridCoords.y = 0
       }
-
-
-
-      console.log('pacManGridCoords', pacManGridCoords)
-
     }
 
     const circleCompensation = 5;
-    const indexToRemove = rectData.findIndex(element => element.x.toFixed(2) === ((tealCircleData[0].x - (0)).toFixed(2)) && (element.y.toFixed(2) === (tealCircleData[0].y - (0)).toFixed(2)))
+    const indexToRemove = rectData.findIndex(element => element.xAxis === pacManGridCoords.x && element.yAxis === pacManGridCoords.y)
     if (indexToRemove !== -1) {
+      if(!rectData[indexToRemove].special) {
+        score ++
+      } else {
+
+        score += 10;
+      }
       rectData.splice(indexToRemove, 1);
       update()
 
@@ -592,10 +774,7 @@ domReady(function () {
     pacmanUpdate()
 
 
-
-    moveCirlce()
-
-  }, 120);
+  }, 130);
 
   window.addEventListener("keydown", (ev) => {
     switch (ev.keyCode) {
@@ -625,24 +804,4 @@ domReady(function () {
     }
   });
 
-
-  const moveCirlce = () => {
-    d3.select("#crack")
-      .selectAll("g svg circle").data(tealCircleData)
-      .style('opacity', 0)
-      .attr('cx', d => `${d.x}%`)
-      .attr('cy', d => `${d.y}%`)
-      .attr('r', `${circleRadius / 5}%`)
-      .attr("transform", "translate(0," + 0 + ")")
-      .style("fill", "teal")
-      .enter()
-      .append('g')
-      .append('svg')
-      .append("circle")
-      .attr('cx', d => `${d.x}%`)
-      .attr('cy', d => `${d.y}%`)
-      .attr('r', `${circleRadius / 5}%`)
-      .attr("transform", "translate(0," + 00 + ")")
-      .style("fill", "teal")
-  }
 });
