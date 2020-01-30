@@ -441,10 +441,11 @@ domReady(function () {
 
   const update = () => {
     var selection = d3.select("#crack")
-      .selectAll("rect").data(rectData, (d) => d.count)
+      .selectAll(".rect").data(rectData, (d) => d.count)
       .attr('x', d => 0)
       .attr('y', d => 0)
       .classed('cell', true)
+      .classed('rect', true)
       .attr('height', '100%')
       .attr('width', '100%')
 
@@ -463,6 +464,7 @@ domReady(function () {
     const svg = selection.enter()
       .append('svg')
       .classed('cell', true)
+
       .attr('x', d => `${d.x}%`)
       .attr('y', d => `${d.y}%`)
       .attr('height', `${cellHeight}%`)
@@ -471,6 +473,7 @@ domReady(function () {
     svg.append("rect")
       .attr('x', d => 0)
       .attr('y', d => 0)
+      .classed('rect', true)
       .attr('height', '100%')
       .attr('width', '100%')
 

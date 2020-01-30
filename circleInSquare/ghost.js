@@ -6,11 +6,24 @@ var domReady = function (callback) {
 
 domReady(function () {
 
-  const radius = 80;
+  const cellDimensions = d3.select('.cell').node().getBoundingClientRect()
+  console.log('cellDimensions', cellDimensions)
+
+  
+  const offsetX = cellDimensions.width/2;
+  const offsetY = cellDimensions.height/2;
+  const radius = 10;
   const diameter = radius * 2;
 
-  var vis = d3.select("body").append("svg")
-    .attr("style", "position: absolute; top: 200; left: 200; overflow: visible")
+
+
+  var vis = d3.select("#crack").append("svg")
+    .attr("width", '100%')
+    .attr("height", '100%')
+    .style('overflow', 'visible')
+    // .attr('transform', 'translate(200, 200)')
+    // .attr("style", "position: absolute; top: 200; left: 200; overflow: visible")
+    // .attr("style", "position: absolute; top: 200; left: 200; overflow: visible")
 
   const degToRadians = deg => deg * (Math.PI / 180)
 
@@ -21,17 +34,21 @@ domReady(function () {
     .outerRadius(radius)
     .startAngle(degToRadians(-90))
     .endAngle(degToRadians(90))
+    // .style("fill", "yellow")
 
   var rectangle = vis.append("rect")
-    .attr("x", radius * -1)
-    .attr("y", 0)
+    .attr("x", (radius * -1) + offsetX)
+    .attr("y", 0 + offsetY)
     .attr('id', 'vis')
     .attr("width", diameter)
-    .attr("height", height);
+    .attr("height", height)
+    .style("fill", "blue")
 
 
   vis.append("path")
     .attr("d", arc)
+    .style("fill", "blue")
+    .attr('transform', `translate(${offsetX}, ${offsetY})`)
 
   const leg1DataX0 = (diameter / 4) * 1;
   const leg1DataX1 = (diameter / 4) * 0;
@@ -57,16 +74,16 @@ domReady(function () {
 
   var svg = vis.append("svg")
     .attr("height", height)
-    .attr('y', height)
+    .attr('y', height + offsetY)
     .attr("x", radius * -1)
 
 
   const leftEye = vis.append("ellipse")
     .attr("cx", function (d) {
-      return (radius / 4) * -1;
+      return ((radius / 4) * -1) + offsetX;
     })
     .attr("cy", function (d) {
-      return (radius / 3) * -1;
+      return ((radius / 3) * -1) + offsetY;
     })
     .style("fill", "white")
     .attr("rx", radius / 6)
@@ -87,10 +104,10 @@ domReady(function () {
 
     const rightEye = vis.append("ellipse")
     .attr("cx", function (d) {
-      return (radius / 4) * 1;
+      return ((radius / 4) * 1) + offsetX;
     })
     .attr("cy", function (d) {
-      return (radius / 3) * -1;
+      return ((radius / 3) * -1) + offsetY;
     })
     .style("fill", "white")
     .attr("rx", radius / 6)
@@ -126,14 +143,14 @@ domReady(function () {
       .classed("legSvg", true)
       .attr("y", height)
       .attr('d', curveFunc(leg1Data))
-      .attr('stroke', 'black')
-      .attr('fill', 'black');
+      .attr('stroke', 'blue')
+      .attr('fill', 'blue');
 
     leg
       .attr("y", height)
       .attr('d', curveFunc(leg1Data))
-      .attr('stroke', 'black')
-      .attr('fill', 'black');
+      .attr('stroke', 'blue')
+      .attr('fill', 'blue');
 
     const leg2 = svg.selectAll('.legSvg2')
       .data(fakeData)
@@ -144,14 +161,14 @@ domReady(function () {
       .classed("legSvg2", true)
       .attr("y", height)
       .attr('d', curveFunc(leg2Data))
-      .attr('stroke', 'black')
-      .attr('fill', 'black');
+      .attr('stroke', 'blue')
+      .attr('fill', 'blue');
 
     leg2
       .attr("y", height)
       .attr('d', curveFunc(leg2Data))
-      .attr('stroke', 'black')
-      .attr('fill', 'black');
+      .attr('stroke', 'blue')
+      .attr('fill', 'blue');
 
     const leg3 = svg.selectAll('.legSvg3')
       .data(fakeData)
@@ -162,14 +179,14 @@ domReady(function () {
       .classed("legSvg3", true)
       .attr("y", height)
       .attr('d', curveFunc(leg3Data))
-      .attr('stroke', 'black')
-      .attr('fill', 'black');
+      .attr('stroke', 'blue')
+      .attr('fill', 'blue');
 
     leg3
       .attr("y", height)
       .attr('d', curveFunc(leg3Data))
-      .attr('stroke', 'black')
-      .attr('fill', 'black');
+      .attr('stroke', 'blue')
+      .attr('fill', 'blue');
 
 
     const leg4 = svg.selectAll('.legSvg4')
@@ -181,45 +198,45 @@ domReady(function () {
       .classed("legSvg4", true)
       .attr("y", height)
       .attr('d', curveFunc(leg4Data))
-      .attr('stroke', 'black')
-      .attr('fill', 'black');
+      .attr('stroke', 'blue')
+      .attr('fill', 'blue');
 
     leg4
       .attr("y", height)
       .attr('d', curveFunc(leg4Data))
-      .attr('stroke', 'black')
-      .attr('fill', 'black');
+      .attr('stroke', 'blue')
+      .attr('fill', 'blue');
   }
 
   const updateLeg = () => {
     fakeData[0] += 1
 
     if (fakeData[0] % 2 === 0) {
-      leg1Data[1].x = leg1DataX0
-      leg1Data[0].x = leg1DataX1
+      leg1Data[1].x = leg1DataX0 + offsetX
+      leg1Data[0].x = leg1DataX1 + offsetX
 
-      leg2Data[1].x = leg2DataX0
-      leg2Data[0].x = leg2DataX1
+      leg2Data[1].x = leg2DataX0 + offsetX
+      leg2Data[0].x = leg2DataX1 + offsetX
 
-      leg3Data[0].x = leg3DataX0
-      leg3Data[1].x = leg3DataX1
+      leg3Data[0].x = leg3DataX0 + offsetX
+      leg3Data[1].x = leg3DataX1 + offsetX
 
-      leg4Data[0].x = leg4DataX0
-      leg4Data[1].x = leg4DataX1
+      leg4Data[0].x = leg4DataX0 + offsetX
+      leg4Data[1].x = leg4DataX1 + offsetX
 
 
     } else {
-      leg1Data[1].x = leg1DataX1
-      leg1Data[0].x = leg1DataX0
+      leg1Data[1].x = leg1DataX1 + offsetX
+      leg1Data[0].x = leg1DataX0 + offsetX
 
-      leg2Data[0].x = leg2DataX0
-      leg2Data[1].x = leg2DataX1
+      leg2Data[0].x = leg2DataX0 + offsetX
+      leg2Data[1].x = leg2DataX1 + offsetX
 
-      leg3Data[1].x = leg3DataX0
-      leg3Data[0].x = leg3DataX1
+      leg3Data[1].x = leg3DataX0 + offsetX
+      leg3Data[0].x = leg3DataX1 + offsetX
 
-      leg4Data[1].x = leg4DataX0
-      leg4Data[0].x = leg4DataX1
+      leg4Data[1].x = leg4DataX0 + offsetX
+      leg4Data[0].x = leg4DataX1 + offsetX
     }
 
     addleg()
