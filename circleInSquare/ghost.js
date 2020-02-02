@@ -8,41 +8,17 @@ var domReady = function (callback) {
 };
 
 domReady(function () {
-  let {width : cellWidth, height: cellHeight } = d3.select('.cell').node().getBoundingClientRect();
-  const offsetX = cellWidth/2;
-  const offsetY = cellHeight/2;
+  let { width: cellWidth, height: cellHeight } = d3.select('.cell').node().getBoundingClientRect();
+  const offsetX = cellWidth / 2;
+  const offsetY = cellHeight / 2;
   let radius = cellHeight < cellWidth ? cellHeight / 4 : cellWidth / 4;
   radius = radius * 1.5
   const diameter = radius * 2;
   let coordX = 7;
   let coordY = 7;
-
-  var vis = d3.select("#crack").append("svg")
-    .attr("width", '100%')
-    .attr("height", '100%')
-    .style('overflow', 'visible')
-
   const height = radius / 2;
-
-  var arc = d3.svg.arc()
-    .innerRadius(0)
-    .outerRadius(radius)
-    .startAngle(degToRadians(-90))
-    .endAngle(degToRadians(90))
-
-  var rectangle = vis.append("rect")
-    .attr("x", (radius * -1) + offsetX)
-    .attr("y", 0 + offsetY)
-    .attr('id', 'vis')
-    .attr("width", diameter)
-    .attr("height", height)
-    .style("fill", "blue")
-    .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${getCoordY(coordY, cellHeight)})`)
-
-  vis.append("path")
-    .attr("d", arc)
-    .style("fill", "blue")
-    .attr('transform', `translate(${offsetX + getCoordX(coordX, cellWidth)}, ${getCoordY(coordY, cellHeight) + offsetY + 0})`)
+  let fakeData = [0];
+  let fakeBodyData = [0];
 
   const leg1DataX0 = (diameter / 4) * 1;
   const leg1DataX1 = (diameter / 4) * 0;
@@ -64,73 +40,209 @@ domReady(function () {
 
   var leg4Data = [{ x: leg4DataX0, y: 0 }, { x: leg4DataX1, y: height }]
 
-  var svg = vis.append("svg")
-    .attr("height", height)
-    .attr('y', height + offsetY + getCoordY(coordY, cellHeight))
-    .attr("x", radius * -1)
-
-
-  const leftEye = vis.append("ellipse")
-    .attr("cx", function (d) {
-      return ((radius / 4) * -1) + offsetX;
-    })
-    .attr("cy", function (d) {
-      return ((radius / 3) * -1) + offsetY;
-    })
-    .style("fill", "white")
-    .attr("rx", radius / 6)
-    .attr("ry", radius / 4)
-    .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${getCoordY(coordY, cellHeight)})`)
-
-  
-   const leftInnerEye =  vis.append("ellipse")
-    .attr("cx", function (d) {
-      return ((radius / 4) * -1);
-    })
-    .attr("cy", function (d) {
-      return ((radius / 3) * -1);
-    })
-    .style("fill", "blue")
-    .attr("rx", (radius / 6)/2)
-    .attr("ry", (radius / 6)/2)
-    .attr('transform', `translate(${getCoordX(coordX, cellWidth) + (cellWidth/2)}, ${getCoordY(coordY, cellHeight) + (cellHeight/2)})`)
-
-    console.log('cellWidth', cellWidth)
-    console.log('cellHeight', cellHeight)
-
-
-    const rightEye = vis.append("ellipse")
-    .attr("cx", function (d) {
-      return ((radius / 4) * 1) + offsetX;
-    })
-    .attr("cy", function (d) {
-      return ((radius / 3) * -1) + offsetY;
-    })
-    .style("fill", "white")
-    .attr("rx", radius / 6)
-    .attr("ry", radius / 4)
-    .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${getCoordY(coordY, cellHeight)})`)
-
-    const rightInnerEye =  vis.append("ellipse")
-    .attr("cx", function (d) {
-      return ((radius / 4) * 1);
-    })
-    .attr("cy", function (d) {
-      return ((radius / 3) * -1);
-    })
-    .style("fill", "blue")
-    .attr("rx", (radius / 6)/2)
-    .attr("ry", (radius / 6)/2)
-    .attr('transform', `translate(${getCoordX(coordX, cellWidth) + (cellWidth/2)}, ${getCoordY(coordY, cellHeight) + (cellHeight/2)})`)
-
-
-  let fakeData = [0]
-
   var curveFunc = d3.svg.area()
     .x1(function (d) { return d.x })      // Position of both line breaks on the X axis
     .y1(function (d) { return d.y })     // Y position of top line breaks
     .y0(0)
     .x0(function (d) { return d.x })
+
+  let svg
+
+  let vis = d3.select("#crack").append("svg")
+    .attr("width", '100%')
+    .attr("height", '100%')
+    .style('overflow', 'visible')
+
+  const update = () => {
+
+    var group = d3.select("#crack").selectAll('.group').data(fakeBodyData)
+
+    group.enter()
+      .append("g")
+      .classed('group', true)
+      .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${getCoordY(coordY, cellHeight)})`)
+
+    group
+      .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${getCoordY(coordY, cellHeight)})`)
+
+    var arc = d3.svg.arc()
+      .innerRadius(0)
+      .outerRadius(radius)
+      .startAngle(degToRadians(-90))
+      .endAngle(degToRadians(90))
+
+    var rectangle = group.selectAll('.ghostRect')
+      .data(fakeBodyData)
+
+    rectangle.enter()
+      .append("rect")
+      .classed('ghostRect', true)
+      .attr("x", (radius * -1) + offsetX)
+      .attr("y", 0 + offsetY)
+      .attr('id', 'group')
+      .attr("width", diameter)
+      .attr("height", height)
+      .style("fill", "blue")
+
+    rectangle
+      .attr("x", (radius * -1) + offsetX)
+      .attr("y", 0 + offsetY)
+      .attr('id', 'group')
+      .attr("width", diameter)
+      .attr("height", height)
+      .style("fill", "blue")
+
+    rectangle.exit().remove()
+
+    const topArc = group.selectAll('.topArc')
+      .data(fakeBodyData)
+
+    topArc.enter().append("path")
+      .classed('topArc', true)
+      .attr("d", arc)
+      .style("fill", "blue")
+      .attr('transform', `translate(${offsetX}, ${offsetY + 0})`)
+
+
+    topArc
+      .attr("d", arc)
+      .style("fill", "blue")
+      .attr('transform', `translate(${offsetX}, ${offsetY + 0})`)
+
+    svg = group.selectAll('.svg')
+      .data(fakeBodyData)
+
+    svg.enter()
+      .append("svg")
+      .classed('svg', true)
+      .attr("height", height)
+      .attr('y', height + offsetY)
+      .attr("x", radius * -1)
+
+    svg
+      .attr("height", height)
+      .attr('y', height + offsetY)
+      .attr("x", radius * -1)
+
+    const leftEye = group.selectAll('.leftEye')
+      .data(fakeBodyData)
+
+    leftEye
+      .enter()
+      .append("ellipse")
+      .classed('leftEye', true)
+      .attr("cx", ((radius / 4) * -1) + offsetX)
+      .attr("cy", ((radius / 3) * -1) + offsetY)
+      .style("fill", "white")
+      .attr("rx", radius / 6)
+      .attr("ry", radius / 4)
+
+
+    leftEye
+      .attr("cx", ((radius / 4) * -1) + offsetX)
+      .attr("cy", ((radius / 3) * -1) + offsetY)
+      .style("fill", "white")
+      .attr("rx", radius / 6)
+      .attr("ry", radius / 4)
+
+
+
+    const leftInnerEye = group.selectAll('.leftInnerEye')
+      .data(fakeBodyData)
+
+    leftInnerEye.enter()
+      .append("ellipse")
+      .classed('leftInnerEye', true)
+      .attr("cx", function (d) {
+        return ((radius / 4) * -1);
+      })
+      .attr("cy", function (d) {
+        return ((radius / 3) * -1);
+      })
+      .style("fill", "blue")
+      .attr("rx", (radius / 6) / 2)
+      .attr("ry", (radius / 6) / 2)
+      .attr('transform', `translate(${cellWidth / 2}, ${cellHeight / 2})`)
+
+    leftInnerEye
+      .attr("cx", function (d) {
+        return ((radius / 4) * -1);
+      })
+      .attr("cy", function (d) {
+        return ((radius / 3) * -1);
+      })
+      .style("fill", "blue")
+      .attr("rx", (radius / 6) / 2)
+      .attr("ry", (radius / 6) / 2)
+      .attr('transform', `translate(${cellWidth / 2}, ${cellHeight / 2})`)
+
+    console.log('cellWidth', cellWidth)
+    console.log('cellHeight', cellHeight)
+
+
+    const rightEye = group.selectAll('.rightEye')
+      .data(fakeBodyData)
+
+    rightEye.enter()
+      .append("ellipse")
+      .classed('rightEye', true)
+      .attr("cx", function (d) {
+        return ((radius / 4) * 1) + offsetX;
+      })
+      .attr("cy", function (d) {
+        return ((radius / 3) * -1) + offsetY;
+      })
+      .style("fill", "white")
+      .attr("rx", radius / 6)
+      .attr("ry", radius / 4)
+
+    rightEye
+      .attr("cx", function (d) {
+        return ((radius / 4) * 1) + offsetX;
+      })
+      .attr("cy", function (d) {
+        return ((radius / 3) * -1) + offsetY;
+      })
+      .style("fill", "white")
+      .attr("rx", radius / 6)
+      .attr("ry", radius / 4)
+
+    const rightInnerEye = group.selectAll('.rightInnerEye')
+      .data(fakeBodyData)
+
+    rightInnerEye.enter()
+      .append("ellipse")
+      .classed('rightInnerEye', true)
+      .attr("cx", function (d) {
+        return ((radius / 4) * 1);
+      })
+      .attr("cy", function (d) {
+        return ((radius / 3) * -1);
+      })
+      .style("fill", "blue")
+      .attr("rx", (radius / 6) / 2)
+      .attr("ry", (radius / 6) / 2)
+      .attr('transform', `translate(${cellWidth / 2}, ${cellHeight / 2})`)
+
+    rightInnerEye
+      .attr("cx", function (d) {
+        return ((radius / 4) * 1);
+      })
+      .attr("cy", function (d) {
+        return ((radius / 3) * -1);
+      })
+      .style("fill", "blue")
+      .attr("rx", (radius / 6) / 2)
+      .attr("ry", (radius / 6) / 2)
+      .attr('transform', `translate(${cellWidth / 2}, ${cellHeight / 2})`)
+  }
+
+  const setCoordAndUpdate = () => {
+    coordX += 1
+    update()
+  }
+
+  setInterval(setCoordAndUpdate, 500)
 
   const addleg = () => {
     const leg = svg.selectAll('.legSvg')
@@ -144,14 +256,13 @@ domReady(function () {
       .attr('d', curveFunc(leg1Data))
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
-      .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${0})`)
+
 
     leg
       .attr("y", height)
       .attr('d', curveFunc(leg1Data))
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
-      .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${0})`)
 
     const leg2 = svg.selectAll('.legSvg2')
       .data(fakeData)
@@ -164,14 +275,13 @@ domReady(function () {
       .attr('d', curveFunc(leg2Data))
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
-      .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${0})`)
 
     leg2
       .attr("y", height)
       .attr('d', curveFunc(leg2Data))
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
-      .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${0})`)
+
 
     const leg3 = svg.selectAll('.legSvg3')
       .data(fakeData)
@@ -184,14 +294,14 @@ domReady(function () {
       .attr('d', curveFunc(leg3Data))
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
-      .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${0})`)
+
 
     leg3
       .attr("y", height)
       .attr('d', curveFunc(leg3Data))
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
-      .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${0})`)
+
 
 
     const leg4 = svg.selectAll('.legSvg4')
@@ -205,14 +315,14 @@ domReady(function () {
       .attr('d', curveFunc(leg4Data))
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
-      .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${0})`)
+
 
     leg4
       .attr("y", height)
       .attr('d', curveFunc(leg4Data))
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
-      .attr('transform', `translate(${getCoordX(coordX, cellWidth)}, ${0})`)
+
   }
 
   const updateLeg = () => {
