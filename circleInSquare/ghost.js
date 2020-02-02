@@ -1,13 +1,9 @@
 
-const getCoordY = (offsetY, _cellWidth) => offsetY * _cellWidth;
-const getCoordX = (offsetX, _cellHeight) => offsetX * _cellHeight;
-const degToRadians = deg => deg * (Math.PI / 180);
+export function ghost() {
+  const getCoordY = (offsetY, _cellWidth) => offsetY * _cellWidth;
+  const getCoordX = (offsetX, _cellHeight) => offsetX * _cellHeight;
+  const degToRadians = deg => deg * (Math.PI / 180);
 
-var domReady = function (callback) {
-  document.readyState === "interactive" || document.readyState === "complete" ? callback() : document.addEventListener("DOMContentLoaded", callback);
-};
-
-domReady(function () {
   let { width: cellWidth, height: cellHeight } = d3.select('.cell').node().getBoundingClientRect();
   const offsetX = cellWidth / 2;
   const offsetY = cellHeight / 2;
@@ -137,7 +133,6 @@ domReady(function () {
       .attr("rx", radius / 6)
       .attr("ry", radius / 4)
 
-
     leftEye
       .attr("cx", ((radius / 4) * -1) + offsetX)
       .attr("cy", ((radius / 3) * -1) + offsetY)
@@ -175,10 +170,6 @@ domReady(function () {
       .attr("rx", (radius / 6) / 2)
       .attr("ry", (radius / 6) / 2)
       .attr('transform', `translate(${cellWidth / 2}, ${cellHeight / 2})`)
-
-    console.log('cellWidth', cellWidth)
-    console.log('cellHeight', cellHeight)
-
 
     const rightEye = group.selectAll('.rightEye')
       .data(fakeBodyData)
@@ -257,7 +248,6 @@ domReady(function () {
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
 
-
     leg
       .attr("y", height)
       .attr('d', curveFunc(leg1Data))
@@ -282,7 +272,6 @@ domReady(function () {
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
 
-
     const leg3 = svg.selectAll('.legSvg3')
       .data(fakeData)
 
@@ -295,14 +284,11 @@ domReady(function () {
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
 
-
     leg3
       .attr("y", height)
       .attr('d', curveFunc(leg3Data))
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
-
-
 
     const leg4 = svg.selectAll('.legSvg4')
       .data(fakeData)
@@ -316,13 +302,11 @@ domReady(function () {
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
 
-
     leg4
       .attr("y", height)
       .attr('d', curveFunc(leg4Data))
       .attr('stroke', 'blue')
       .attr('fill', 'blue')
-
   }
 
   const updateLeg = () => {
@@ -340,7 +324,6 @@ domReady(function () {
 
       leg4Data[0].x = leg4DataX0 + offsetX
       leg4Data[1].x = leg4DataX1 + offsetX
-
 
     } else {
       leg1Data[1].x = leg1DataX1 + offsetX
@@ -361,4 +344,4 @@ domReady(function () {
 
   setInterval(updateLeg, 200)
 
-})
+};
