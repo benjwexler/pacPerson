@@ -19,7 +19,7 @@ const generateNoCircleCoords = () => {
     addNoCircleCoords(1, 4, 2, 5)
     addNoCircleCoords(4, 4, 4, 8)
     addNoCircleCoords(5, 6, 6, 6)
-    addNoCircleCoords(5, 4, 10, 4)
+    addNoCircleCoords(6, 4, 10, 4)
     addNoCircleCoords(8, 5, 8, 6)
     addNoCircleCoords(10, 6, 12, 6)
     addNoCircleCoords(12, 4, 12, 8)
