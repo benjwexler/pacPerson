@@ -7,11 +7,10 @@ import animateSpecialDots from './animateSpecialDots.js';
 import update from './update.js';
 import getCircleRadius from './getCircleRadius.js';
 import getPacmanRadius from './getPacmanRadius.js';
+import {numRows, numCols} from './variables.js';
 
 // Fire when DOM is available
 export function pacman() {
-  const numRows = 19;
-  const numCols = 17;
   let score = 0;
   let cellHeight = 100 / numRows;
   let cellWidth = 100 / numCols;
@@ -100,7 +99,7 @@ export function pacman() {
   const pacmanUpdate = () => {
     arc = d3.svg.arc()
       .innerRadius(0)
-      .outerRadius(radius);
+      .outerRadius(radius*1.5);
 
     pie = d3.layout.pie()
       .startAngle(.5 * Math.PI)

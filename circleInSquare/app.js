@@ -9,6 +9,9 @@ var domReady = function (callback) {
 domReady(function () {
 
   pacman();
-  ghost();
+  ghost(1, 'purple');
+  ghost(2, 'blue');
+  ghost(3, 'green');
+  ghost(4, 'pink');
 
 });
