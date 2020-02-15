@@ -1,48 +1,44 @@
 <html>
 
-	<head>
+<head>
 
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" user-scalable="no">
-		<title>D3 Example: Enter, Update, Exit – Christian Behrens</title>
-			
-		<link href="./styles.css" rel="stylesheet">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" user-scalable="no">
+  <title>PacPerson</title>
 
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
 
-  		<link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet" type="text/css">
-		<link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
-
-		
-
-  </head>
-  
-  
-  <!-- style="margin: 0px; padding: 0px; display: flex; height: 100%" -->
-  <body 
-  style="margin: 0px; padding: 0px; display: flex; height: 100%"
-  >
-
-      <!-- <h1>Enter, Update, Exit</h1>
-      <p id="info">Press the button to add an element to the end of the array. Click a bar to remove the connected element from the data set.</p>
-      
-      
-      <div id="chart"></div>
-  
-      <div id="dataset"></div>
-  
-      <button id="add-btn">Add Element</button> -->
-
-      <svg id="crack" background="black" style="background: black; margin: auto" width="90%" height="90%"/> </svg>
-
-      <!-- <div id="chart"></div> -->
+  <style>
+    form {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      z-index: 9999999;
+      opacity: 0;
+      ;
+    }
+  </style>
+</head>
 
 
-		<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="./main.js" charset="utf-8"></script>
-    <!-- <script src="./circleInSquare.js" charset="utf-8"></script> -->
-    <!-- <script src="./d3Messing.js" charset="utf-8"></script> -->
+<body style="margin: 0px; padding: 0px; display: flex; height: 100%; background: black">
+  <div style="color:white; margin-left: 20px; position: absolute; left: 0px">Score:
+    <span id="score">0</span>
+  </div>
+  <form>
+    <label><input type="radio" name="dataset" value="apples" checked> Apples</label>
+    <label><input type="radio" name="dataset" value="oranges"> Oranges</label>
+  </form>
 
-	</body>
+  <svg id="crack" background="black" style="margin: auto; border: 0px solid yellow; box-sizing: border-box" width="90%"
+    height="90%" /> </svg>
+
+  </div>
+  <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script type='module' src="./app.js" charset="utf-8"></script>
+
+</body>
 
 </html>

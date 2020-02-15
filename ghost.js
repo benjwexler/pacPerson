@@ -1,7 +1,7 @@
 
-import createBorderHorizontal from './createBorderHorizontal.js';
-import createBorderVertical from './createBorderVertical.js';
-import { numRows, numCols } from './variables.js';
+import createBorderHorizontal from './data/createBorderHorizontal.js';
+import createBorderVertical from './data/createBorderVertical.js';
+import { numRows, numCols } from './board/variables.js';
 
 export function ghost(ghostNum, color) {
   const getCoordY = (offsetY, _cellWidth) => offsetY * _cellWidth;

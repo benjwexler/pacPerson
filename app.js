@@ -1,4 +1,4 @@
-import { pacman } from './circleInSquare2.js';
+import { pacman } from './pacman/pacman.js';
 import { ghost } from './ghost.js';
 
 var domReady = function (callback) {
