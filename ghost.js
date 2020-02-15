@@ -4,6 +4,7 @@ import createBorderVertical from './data/createBorderVertical.js';
 import { numRows, numCols } from './board/variables.js';
 
 export function ghost(ghostNum, color) {
+  let isInCenter = true;
   const getCoordY = (offsetY, _cellWidth) => offsetY * _cellWidth;
   const getCoordX = (offsetX, _cellHeight) => offsetX * _cellHeight;
   const degToRadians = deg => deg * (Math.PI / 180);
@@ -40,8 +41,8 @@ export function ghost(ghostNum, color) {
   let borderDataVerticalMatrix = createBorderVertical(100 / numCols, 100 / numRows, numRows, numCols);
   let borderDataHorizontalMatrix = createBorderHorizontal(100 / numCols, 100 / numRows, numRows, numCols);
 
-  let coordX = 0;
-  let coordY = 0;
+  let coordX = 8;
+  let coordY = 8;
 
   let fakeData = [0];
   let fakeBodyData = [0];
@@ -260,9 +261,14 @@ export function ghost(ghostNum, color) {
         4: 2,
       };
 
-      if (cannotMove[randomNumber].hasBorder || randomNumber === preventPreviousDirection[previousDirection]) {
+      if ((cannotMove[randomNumber].hasBorder && (!cannotMove[randomNumber].isOpening || (cannotMove[randomNumber].isOpening && !isInCenter))) || randomNumber === preventPreviousDirection[previousDirection]) {
         return getDirection();
       }
+
+      if (cannotMove[randomNumber].isOpening) {
+        isInCenter = false;
+      };
+
       const mutateInstructions = {
         1: () => coordX - 1 >= 0 ? coordX -= 1 : coordX = numCols - 1,
         2: () => coordY -= 1,

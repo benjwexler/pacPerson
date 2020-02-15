@@ -61,7 +61,7 @@ const update = ({
         .attr("x2", `${row[i + 1].x}%`)
         .attr("y2", `${piece.y}%`)
         .attr("stroke-width", 5)
-        .attr("stroke", "#C7CC56")
+        .attr("stroke", !piece.isOpening ? "#C7CC56" : 'red')
     })
   })
 

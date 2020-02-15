@@ -25,6 +25,7 @@ const createBorderHorizontal = (cellWidth, cellHeight, numRows, numCols) => {
     const row = borderDataHorizontalMatrix[border.y]
     for (let i = border.startX; i < border.endX; i++) {
       row[i].hasBorder = true;
+      row[i].isOpening = border.isOpening;
     }
   })
   return borderDataHorizontalMatrix;
