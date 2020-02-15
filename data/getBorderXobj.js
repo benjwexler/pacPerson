@@ -76,8 +76,13 @@ const getBorderXobj = (numRows, numCols) => {
     { y: 4, startX: 14, endX: 16 },
     { y: 6, startX: 14, endX: 16 },
 
+  // center box top
+    { y: 8, startX: 6, endX: 8 }, 
+    { y: 8, startX: 8, endX: 9, isOpening: true }, // center opening
+    { y: 8, startX: 9, endX: 11 }, 
 
-    { y: 8, startX: 6, endX: 11 },
+
+
     { y: 11, startX: 6, endX: 11 },
 
 
