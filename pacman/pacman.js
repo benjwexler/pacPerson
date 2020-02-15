@@ -1,13 +1,13 @@
 
-import createRectData from './createRectData.js';
-import createBorderHorizontal from './createBorderHorizontal.js';
-import createBorderVertical from './createBorderVertical.js';
+import createRectData from '../data/createRectData.js';
+import createBorderHorizontal from '../data/createBorderHorizontal.js';
+import createBorderVertical from '../data/createBorderVertical.js';
 import getRotateAmount from './getRotateAmount.js';
-import animateSpecialDots from './animateSpecialDots.js';
-import update from './update.js';
-import getCircleRadius from './getCircleRadius.js';
+import animateSpecialDots from '../board/animateSpecialDots.js';
+import update from '../board/update.js';
+import getCircleRadius from '../board/getCircleRadius.js';
 import getPacmanRadius from './getPacmanRadius.js';
-import {numRows, numCols} from './variables.js';
+import {numRows, numCols} from '../board/variables.js';
 
 // Fire when DOM is available
 export function pacman() {
