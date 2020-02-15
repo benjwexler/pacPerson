@@ -7,44 +7,44 @@ export function ghost(ghostNum, color) {
   const getCoordY = (offsetY, _cellWidth) => offsetY * _cellWidth;
   const getCoordX = (offsetX, _cellHeight) => offsetX * _cellHeight;
   const degToRadians = deg => deg * (Math.PI / 180);
+  let cellWidth, cellHeight, radius, diameter, height, offsetX, offsetY;
+  let leg1DataX0, leg1DataX1, leg2DataX0, leg2DataX1, leg3DataX0, leg3DataX1, leg4DataX0, leg4DataX1;
+  let leg1Data, leg2Data, leg3Data, leg4Data;
+  
+  const getAndUpdateDimensions = () => {
+    let { width: _cellWidth, height: _cellHeight } = d3.select('.cell').node().getBoundingClientRect();
+    let _radius = _cellHeight < _cellWidth ? _cellHeight / 4 : _cellWidth / 4;
+    _radius = _radius * 1.5;
+    radius = _radius;
+    cellWidth = _cellWidth;
+    cellHeight = _cellHeight;
+    diameter = _radius * 2;
+    height = _radius / 2;
+    offsetX = cellWidth / 2
+    offsetY = cellHeight / 2
+    leg1DataX0 = (diameter / 4) * 1;
+    leg1DataX1 = (diameter / 4) * 0;
+    leg2DataX0 = (diameter / 4) * 2;
+    leg2DataX1 = (diameter / 4) * 1;
+    leg3DataX0 = (diameter / 4) * 3;
+    leg3DataX1 = (diameter / 4) * 2;
+    leg4DataX0 = (diameter / 4) * 4;
+    leg4DataX1 = (diameter / 4) * 3;
+    leg1Data = [{ x: leg1DataX0, y: 0 }, { x: leg1DataX1, y: height }]
+    leg2Data = [{ x: leg2DataX0, y: 0 }, { x: leg2DataX1, y: height }]
+    leg3Data = [{ x: leg3DataX0, y: 0 }, { x: leg3DataX1, y: height }]
+    leg4Data = [{ x: leg4DataX0, y: 0 }, { x: leg4DataX1, y: height }]
+  };
 
-  let { width: cellWidth, height: cellHeight } = d3.select('.cell').node().getBoundingClientRect();
-
-  // let borderDataHorizontalMatrix = createBorderHorizontal(cellWidth, cellHeight, numRows, numCols);
+  getAndUpdateDimensions();
   let borderDataVerticalMatrix = createBorderVertical(100 / numCols, 100 / numRows, numRows, numCols);
   let borderDataHorizontalMatrix = createBorderHorizontal(100 / numCols, 100 / numRows, numRows, numCols);
 
-
-  const offsetX = cellWidth / 2;
-  const offsetY = cellHeight / 2;
-  let radius = cellHeight < cellWidth ? cellHeight / 4 : cellWidth / 4;
-  radius = radius * 1.5
-  const diameter = radius * 2;
   let coordX = 0;
   let coordY = 0;
-  const height = radius / 2;
+
   let fakeData = [0];
   let fakeBodyData = [0];
-
-  const leg1DataX0 = (diameter / 4) * 1;
-  const leg1DataX1 = (diameter / 4) * 0;
-
-  const leg2DataX0 = (diameter / 4) * 2;
-  const leg2DataX1 = (diameter / 4) * 1;
-
-  const leg3DataX0 = (diameter / 4) * 3;
-  const leg3DataX1 = (diameter / 4) * 2;
-
-  const leg4DataX0 = (diameter / 4) * 4;
-  const leg4DataX1 = (diameter / 4) * 3;
-
-  var leg1Data = [{ x: leg1DataX0, y: 0 }, { x: leg1DataX1, y: height }]
-
-  var leg2Data = [{ x: leg2DataX0, y: 0 }, { x: leg2DataX1, y: height }]
-
-  var leg3Data = [{ x: leg3DataX0, y: 0 }, { x: leg3DataX1, y: height }]
-
-  var leg4Data = [{ x: leg4DataX0, y: 0 }, { x: leg4DataX1, y: height }]
 
   var curveFunc = d3.svg.area()
     .x1(function (d) { return d.x })      // Position of both line breaks on the X axis
@@ -52,7 +52,7 @@ export function ghost(ghostNum, color) {
     .y0(0)
     .x0(function (d) { return d.x })
 
-  let svg
+  let svg;
 
   let vis = d3.select("#crack").append("svg")
     .attr("width", '100%')
@@ -235,10 +235,12 @@ export function ghost(ghostNum, color) {
       .attr('transform', `translate(${cellWidth / 2}, ${cellHeight / 2})`)
   }
 
-  // let randomNumber = (Math.floor(Math.random() * 4)) + 1;
+  window.addEventListener("resize", () => {
+    getAndUpdateDimensions();
+    update();
+  });
+
   let previousDirection;
-
-
 
   const setCoordAndUpdate = () => {
 
@@ -262,7 +264,7 @@ export function ghost(ghostNum, color) {
         return getDirection();
       }
       const mutateInstructions = {
-        1: () => coordX - 1 >= 0 ? coordX -= 1 : coordX = numCols-1,
+        1: () => coordX - 1 >= 0 ? coordX -= 1 : coordX = numCols - 1,
         2: () => coordY -= 1,
         3: () => coordX + 1 < numCols ? coordX += 1 : coordX = 0,
         4: () => coordY += 1,
