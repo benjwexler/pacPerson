@@ -7,17 +7,16 @@ import animateSpecialDots from '../board/animateSpecialDots.js';
 import update from '../board/update.js';
 import getCircleRadius from '../board/getCircleRadius.js';
 import getPacmanRadius from './getPacmanRadius.js';
-import {numRows, numCols} from '../board/variables.js';
+import { numRows, numCols } from '../board/variables.js';
 
 // Fire when DOM is available
 export function pacman(store) {
-  const { dispatch } = store;
+  const { dispatch, getState } = store;
   let score = 0;
   let cellHeight = 100 / numRows;
   let cellWidth = 100 / numCols;
   let rectData = createRectData(cellWidth, cellHeight, numCols);
-  const tealCircleData = [{ x: 0, y: 0, }];
-  let pacManGridCoords = { x: 0, y: 0, };
+  let pacManGridCoords = getState().coords.pacman;
 
   // Pacman
   // __________
@@ -102,7 +101,7 @@ export function pacman(store) {
   const pacmanUpdate = () => {
     arc = d3.svg.arc()
       .innerRadius(0)
-      .outerRadius(radius*1.5);
+      .outerRadius(radius * 1.5);
 
     pie = d3.layout.pie()
       .startAngle(.5 * Math.PI)
@@ -132,14 +131,14 @@ export function pacman(store) {
     const g = mainSvg.selectAll('g').data(halfCircleData)
       .classed("top", (d, i) => i === 0)
       .classed("bottom", (d, i) => i !== 0)
-      .attr("transform", `translate(${((tealCircleData[0].x + cellWidth / 2) * (gridWidth / 100)).toFixed(2)}, ${((tealCircleData[0].y + cellHeight / 2) * (gridHeight / 100)).toFixed(2)})rotate(${getRotateAmount(currentKeyCode)})`)
+      .attr("transform", `translate(${(((pacManGridCoords.x * cellWidth) + cellWidth / 2) * (gridWidth / 100)).toFixed(2)}, ${(((pacManGridCoords.y * cellHeight) + cellHeight / 2) * (gridHeight / 100)).toFixed(2)})rotate(${getRotateAmount(currentKeyCode)})`)
       .style('overflow', 'visible')
 
     halfCircleEnter
       .append("g")
       .classed("top", (d, i) => i === 0)
       .classed("bottom", (d, i) => i !== 0)
-      .attr("transform", `translate(${((tealCircleData[0].x + cellWidth / 2) * (gridWidth / 100)).toFixed(2)}, ${((tealCircleData[0].y + cellHeight / 2) * (gridHeight / 100)).toFixed(2)})rotate(${getRotateAmount(currentKeyCode)})`)
+      .attr("transform", `translate(${(((pacManGridCoords.x * cellWidth) + cellWidth / 2) * (gridWidth / 100)).toFixed(2)}, ${(((pacManGridCoords.y * cellHeight) + cellHeight / 2) * (gridHeight / 100)).toFixed(2)})rotate(${getRotateAmount(currentKeyCode)})`)
       .style('overflow', 'visible')
 
     halfCircle.exit().remove()
@@ -207,19 +206,16 @@ export function pacman(store) {
 
     if (shouldAnimateMouth) {
       const { x, y } = pacManGridCoords
-
       switch (currentKeyCode) {
         case 37:
           if (borderDataVerticalMatrix[x][y].hasBorder) {
             d3.select("input[value=\"apples\"]").property("checked", true).each(change);
             return clearInterval(mouthInterval);
           }
-          
+
           pacManGridCoords.x -= 1
-          
-          tealCircleData[0].x -= cellWidth
+
           if (pacManGridCoords.x < 0) {
-            tealCircleData[0].x = 100
             pacManGridCoords.x = numCols
           }
           break;
@@ -229,13 +225,11 @@ export function pacman(store) {
             return clearInterval(mouthInterval);
           }
           pacManGridCoords.y -= 1
-          tealCircleData[0].y -= cellHeight
-          if (tealCircleData[0].y <= 0) {
+          if (pacManGridCoords.y <= 0) {
             d3.select("input[value=\"apples\"]").property("checked", true).each(change);
             clearInterval(mouthInterval)
-            tealCircleData[0].y = 0
           }
-          
+
           break;
         case 39:
           if (borderDataVerticalMatrix[x + 1][y].hasBorder) {
@@ -243,25 +237,21 @@ export function pacman(store) {
             return clearInterval(mouthInterval);
           }
           pacManGridCoords.x += 1
-          tealCircleData[0].x += cellWidth
           if (pacManGridCoords.x >= numCols) {
             clearInterval(mouthInterval)
-            tealCircleData[0].x = 0
             pacManGridCoords.x = 0
           }
-          
+
           break;
         case 40:
           if (borderDataHorizontalMatrix[y + 1][x].hasBorder) {
             return clearInterval(mouthInterval);
           }
           pacManGridCoords.y += 1
-          tealCircleData[0].y += cellHeight
-          if (tealCircleData[0].y > 100) {
+          if (pacManGridCoords.y > 100) {
             clearInterval(mouthInterval)
-            tealCircleData[0].y = 100 - cellHeight
           }
-          
+
           break;
         default:
       }
@@ -273,7 +263,14 @@ export function pacman(store) {
       if (pacManGridCoords.y < 0) {
         pacManGridCoords.y = 0
       }
-      dispatch({ type: 'MOVE',  coords: {x: pacManGridCoords.x, y: pacManGridCoords.y}})
+      // dispatch({
+      //   type: 'MOVE',
+      //   actor: 'pacman',
+      //   coords: {
+      //       x: pacManGridCoords.x,
+      //       y: pacManGridCoords.y
+      //   }
+      // })
     }
 
     const indexToRemove = rectData.findIndex(element => element.xAxis === pacManGridCoords.x && element.yAxis === pacManGridCoords.y);
@@ -293,6 +290,14 @@ export function pacman(store) {
         borderDataVerticalMatrix,
         score,
         store,
+      })
+      dispatch({
+        type: 'MOVE',
+        actor: 'pacman',
+        coords: {
+            x: pacManGridCoords.x,
+            y: pacManGridCoords.y
+        }
       })
     }
     pacmanUpdate()
