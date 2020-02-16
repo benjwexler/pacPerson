@@ -7,7 +7,9 @@ const update = ({
   borderDataHorizontalMatrix,
   borderDataVerticalMatrix,
   score,
+  store,
 }) => {
+  const {getState, subscribe, dispatch} = store;
   var selection = d3.select("#crack")
     .selectAll(".rect").data(rectData, (d) => d.count)
     .attr('x', 0)

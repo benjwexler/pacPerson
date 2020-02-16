@@ -10,7 +10,8 @@ import getPacmanRadius from './getPacmanRadius.js';
 import {numRows, numCols} from '../board/variables.js';
 
 // Fire when DOM is available
-export function pacman() {
+export function pacman(store) {
+  const { dispatch } = store;
   let score = 0;
   let cellHeight = 100 / numRows;
   let cellWidth = 100 / numCols;
@@ -48,6 +49,7 @@ export function pacman() {
       borderDataHorizontalMatrix,
       borderDataVerticalMatrix,
       score,
+      store
     });
   });
 
@@ -59,6 +61,7 @@ export function pacman() {
     borderDataHorizontalMatrix,
     borderDataVerticalMatrix,
     score,
+    store
   })
   animateSpecialDots();
 
@@ -211,7 +214,9 @@ export function pacman() {
             d3.select("input[value=\"apples\"]").property("checked", true).each(change);
             return clearInterval(mouthInterval);
           }
+          
           pacManGridCoords.x -= 1
+          
           tealCircleData[0].x -= cellWidth
           if (pacManGridCoords.x < 0) {
             tealCircleData[0].x = 100
@@ -230,6 +235,7 @@ export function pacman() {
             clearInterval(mouthInterval)
             tealCircleData[0].y = 0
           }
+          
           break;
         case 39:
           if (borderDataVerticalMatrix[x + 1][y].hasBorder) {
@@ -243,6 +249,7 @@ export function pacman() {
             tealCircleData[0].x = 0
             pacManGridCoords.x = 0
           }
+          
           break;
         case 40:
           if (borderDataHorizontalMatrix[y + 1][x].hasBorder) {
@@ -254,6 +261,7 @@ export function pacman() {
             clearInterval(mouthInterval)
             tealCircleData[0].y = 100 - cellHeight
           }
+          
           break;
         default:
       }
@@ -265,6 +273,7 @@ export function pacman() {
       if (pacManGridCoords.y < 0) {
         pacManGridCoords.y = 0
       }
+      dispatch({ type: 'MOVE',  coords: {x: pacManGridCoords.x, y: pacManGridCoords.y}})
     }
 
     const indexToRemove = rectData.findIndex(element => element.xAxis === pacManGridCoords.x && element.yAxis === pacManGridCoords.y);
@@ -283,6 +292,7 @@ export function pacman() {
         borderDataHorizontalMatrix,
         borderDataVerticalMatrix,
         score,
+        store,
       })
     }
     pacmanUpdate()
