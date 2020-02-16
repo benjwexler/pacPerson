@@ -3,7 +3,8 @@ import createBorderHorizontal from './data/createBorderHorizontal.js';
 import createBorderVertical from './data/createBorderVertical.js';
 import { numRows, numCols } from './board/variables.js';
 
-export function ghost(ghostNum, color) {
+export function ghost(ghostNum, color, store) {
+  const {getState} = store;
   let isInCenter = true;
   const getCoordY = (offsetY, _cellWidth) => offsetY * _cellWidth;
   const getCoordX = (offsetX, _cellHeight) => offsetX * _cellHeight;
@@ -61,7 +62,10 @@ export function ghost(ghostNum, color) {
     .style('overflow', 'visible')
 
   const update = () => {
-
+    const pacManCoords = getState();
+    if(pacManCoords.x === coordX && pacManCoords.y === coordY) {
+      setTimeout(alert, 0, "over" )
+    }
     var group = d3.select("#crack").selectAll(`.group${ghostNum}`).data(fakeBodyData)
 
     group.enter()
