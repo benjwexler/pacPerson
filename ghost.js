@@ -4,7 +4,8 @@ import createBorderVertical from './data/createBorderVertical.js';
 import { numRows, numCols } from './board/variables.js';
 
 export function ghost(ghostNum, color, store) {
-  const {getState} = store;
+  const { getState, dispatch } = store;
+  // let store.getState().isGamePaused ? 'red' : color = store.getState().isGamePaused ? 'red' : _store.getState().isGamePaused ? 'red' : color;
   let isInCenter = true;
   const getCoordY = (offsetY, _cellWidth) => offsetY * _cellWidth;
   const getCoordX = (offsetX, _cellHeight) => offsetX * _cellHeight;
@@ -12,7 +13,7 @@ export function ghost(ghostNum, color, store) {
   let cellWidth, cellHeight, radius, diameter, height, offsetX, offsetY;
   let leg1DataX0, leg1DataX1, leg2DataX0, leg2DataX1, leg3DataX0, leg3DataX1, leg4DataX0, leg4DataX1;
   let leg1Data, leg2Data, leg3Data, leg4Data;
-  
+
   const getAndUpdateDimensions = () => {
     let { width: _cellWidth, height: _cellHeight } = d3.select('.cell').node().getBoundingClientRect();
     let _radius = _cellHeight < _cellWidth ? _cellHeight / 4 : _cellWidth / 4;
@@ -62,10 +63,16 @@ export function ghost(ghostNum, color, store) {
     .style('overflow', 'visible')
 
   const update = () => {
-    const pacManCoords = getState();
-    if(pacManCoords.x === coordX && pacManCoords.y === coordY) {
-      setTimeout(alert, 0, "over" )
-    }
+    dispatch({
+      type: 'MOVE',
+      actor: `ghost${ghostNum}`,
+      coords: {
+        x: coordX,
+        y: coordY,
+      }
+    })
+
+
     var group = d3.select("#crack").selectAll(`.group${ghostNum}`).data(fakeBodyData)
 
     group.enter()
@@ -93,7 +100,7 @@ export function ghost(ghostNum, color, store) {
       .attr('id', 'group')
       .attr("width", diameter)
       .attr("height", height)
-      .style("fill", `${color}`)
+      .style("fill", `${store.getState().isGamePaused ? 'red' : color}`)
 
     rectangle
       .attr("x", (radius * -1) + offsetX)
@@ -101,7 +108,7 @@ export function ghost(ghostNum, color, store) {
       .attr('id', 'group')
       .attr("width", diameter)
       .attr("height", height)
-      .style("fill", `${color}`)
+      .style("fill", `${store.getState().isGamePaused ? 'red' : color}`)
 
     rectangle.exit().remove()
 
@@ -111,12 +118,12 @@ export function ghost(ghostNum, color, store) {
     topArc.enter().append("path")
       .classed(`topArc${ghostNum}`, true)
       .attr("d", arc)
-      .style("fill", `${color}`)
+      .style("fill", `${store.getState().isGamePaused ? 'red' : color}`)
       .attr('transform', `translate(${offsetX}, ${offsetY + 0})`)
 
     topArc
       .attr("d", arc)
-      .style("fill", `${color}`)
+      .style("fill", `${store.getState().isGamePaused ? 'red' : color}`)
       .attr('transform', `translate(${offsetX}, ${offsetY + 0})`)
 
     svg = group.selectAll(`.svg${ghostNum}`)
@@ -166,7 +173,7 @@ export function ghost(ghostNum, color, store) {
       .attr("cy", function (d) {
         return ((radius / 3) * -1);
       })
-      .style("fill", `${color}`)
+      .style("fill", `${store.getState().isGamePaused ? 'red' : color}`)
       .attr("rx", (radius / 6) / 2)
       .attr("ry", (radius / 6) / 2)
       .attr('transform', `translate(${cellWidth / 2}, ${cellHeight / 2})`)
@@ -178,7 +185,7 @@ export function ghost(ghostNum, color, store) {
       .attr("cy", function (d) {
         return ((radius / 3) * -1);
       })
-      .style("fill", `${color}`)
+      .style("fill", `${store.getState().isGamePaused ? 'red' : color}`)
       .attr("rx", (radius / 6) / 2)
       .attr("ry", (radius / 6) / 2)
       .attr('transform', `translate(${cellWidth / 2}, ${cellHeight / 2})`)
@@ -222,7 +229,7 @@ export function ghost(ghostNum, color, store) {
       .attr("cy", function (d) {
         return ((radius / 3) * -1);
       })
-      .style("fill", `${color}`)
+      .style("fill", `${store.getState().isGamePaused ? 'red' : color}`)
       .attr("rx", (radius / 6) / 2)
       .attr("ry", (radius / 6) / 2)
       .attr('transform', `translate(${cellWidth / 2}, ${cellHeight / 2})`)
@@ -234,7 +241,7 @@ export function ghost(ghostNum, color, store) {
       .attr("cy", function (d) {
         return ((radius / 3) * -1);
       })
-      .style("fill", `${color}`)
+      .style("fill", `${store.getState().isGamePaused ? 'red' : color}`)
       .attr("rx", (radius / 6) / 2)
       .attr("ry", (radius / 6) / 2)
       .attr('transform', `translate(${cellWidth / 2}, ${cellHeight / 2})`)
@@ -248,7 +255,9 @@ export function ghost(ghostNum, color, store) {
   let previousDirection;
 
   const setCoordAndUpdate = () => {
-
+    // if(store.getState().isGamePaused) {
+    //   // return update()
+    // }
     const getDirection = () => {
       const randomNumber = (Math.floor(Math.random() * 4)) + 1;
       const cannotMove = {
@@ -280,7 +289,21 @@ export function ghost(ghostNum, color, store) {
         4: () => coordY += 1,
       };
 
-      mutateInstructions[randomNumber]();
+      if (!store.getState().isGamePaused) {
+        mutateInstructions[randomNumber]();
+      } else {
+        coordX = 8;
+        coordY = 8;
+        isInCenter = true
+        // setTimeout(dispatch, 0, {
+        //   type: 'RESUME GAME',
+        // })
+        //   dispatch({
+        //   type: 'RESUME GAME',
+        // })
+      }
+
+
       previousDirection = randomNumber;
       update()
 
@@ -300,14 +323,14 @@ export function ghost(ghostNum, color, store) {
       .classed(`legSvg${ghostNum}`, true)
       .attr("y", height)
       .attr('d', curveFunc(leg1Data))
-      .attr('stroke', `${color}`)
-      .attr('fill', `${color}`)
+      .attr('stroke', `${store.getState().isGamePaused ? 'red' : color}`)
+      .attr('fill', `${store.getState().isGamePaused ? 'red' : color}`)
 
     leg
       .attr("y", height)
       .attr('d', curveFunc(leg1Data))
-      .attr('stroke', `${color}`)
-      .attr('fill', `${color}`)
+      .attr('stroke', `${store.getState().isGamePaused ? 'red' : color}`)
+      .attr('fill', `${store.getState().isGamePaused ? 'red' : color}`)
 
     const leg2 = svg.selectAll(`.legSvg2${ghostNum}`)
       .data(fakeData)
@@ -318,14 +341,14 @@ export function ghost(ghostNum, color, store) {
       .classed(`legSvg2${ghostNum}`, true)
       .attr("y", height)
       .attr('d', curveFunc(leg2Data))
-      .attr('stroke', `${color}`)
-      .attr('fill', `${color}`)
+      .attr('stroke', `${store.getState().isGamePaused ? 'red' : color}`)
+      .attr('fill', `${store.getState().isGamePaused ? 'red' : color}`)
 
     leg2
       .attr("y", height)
       .attr('d', curveFunc(leg2Data))
-      .attr('stroke', `${color}`)
-      .attr('fill', `${color}`)
+      .attr('stroke', `${store.getState().isGamePaused ? 'red' : color}`)
+      .attr('fill', `${store.getState().isGamePaused ? 'red' : color}`)
 
     const leg3 = svg.selectAll(`.legSvg3${ghostNum}`)
       .data(fakeData)
@@ -336,14 +359,14 @@ export function ghost(ghostNum, color, store) {
       .classed(`legSvg3${ghostNum}`, true)
       .attr("y", height)
       .attr('d', curveFunc(leg3Data))
-      .attr('stroke', `${color}`)
-      .attr('fill', `${color}`)
+      .attr('stroke', `${store.getState().isGamePaused ? 'red' : color}`)
+      .attr('fill', `${store.getState().isGamePaused ? 'red' : color}`)
 
     leg3
       .attr("y", height)
       .attr('d', curveFunc(leg3Data))
-      .attr('stroke', `${color}`)
-      .attr('fill', `${color}`)
+      .attr('stroke', `${store.getState().isGamePaused ? 'red' : color}`)
+      .attr('fill', `${store.getState().isGamePaused ? 'red' : color}`)
 
     const leg4 = svg.selectAll(`.legSvg4${ghostNum}`)
       .data(fakeData)
@@ -354,14 +377,14 @@ export function ghost(ghostNum, color, store) {
       .classed(`legSvg4${ghostNum}`, true)
       .attr("y", height)
       .attr('d', curveFunc(leg4Data))
-      .attr('stroke', `${color}`)
-      .attr('fill', `${color}`)
+      .attr('stroke', `${store.getState().isGamePaused ? 'red' : color}`)
+      .attr('fill', `${store.getState().isGamePaused ? 'red' : color}`)
 
     leg4
       .attr("y", height)
       .attr('d', curveFunc(leg4Data))
-      .attr('stroke', `${color}`)
-      .attr('fill', `${color}`)
+      .attr('stroke', `${store.getState().isGamePaused ? 'red' : color}`)
+      .attr('fill', `${store.getState().isGamePaused ? 'red' : color}`)
   }
 
   const updateLeg = () => {
