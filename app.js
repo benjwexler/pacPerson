@@ -7,7 +7,7 @@ var domReady = function (callback) {
 
 
 domReady(function () {
-
+  console.log("TEST")
   pacman();
   ghost(1, 'purple');
   ghost(2, 'blue');
