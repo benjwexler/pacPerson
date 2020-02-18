@@ -7,7 +7,10 @@ const update = ({
   borderDataHorizontalMatrix,
   borderDataVerticalMatrix,
   score,
+  store,
 }) => {
+  const {getState, subscribe, dispatch} = store;
+
   var selection = d3.select("#crack")
     .selectAll(".rect").data(rectData, (d) => d.count)
     .attr('x', 0)
@@ -60,7 +63,7 @@ const update = ({
         .attr("y1", `${piece.y}%`)
         .attr("x2", `${row[i + 1].x}%`)
         .attr("y2", `${piece.y}%`)
-        .attr("stroke-width", 5)
+        .attr("stroke-width", circleRadius > 8.5 ? 5 : 1)
         .attr("stroke", !piece.isOpening ? "#C7CC56" : 'red')
     })
   })
@@ -74,7 +77,7 @@ const update = ({
         .attr("y1", `${piece.y}%`)
         .attr("x2", `${piece.x}%`)
         .attr("y2", `${row[i + 1].y}%`)
-        .attr("stroke-width", 5)
+        .attr("stroke-width", circleRadius > 8.5 ? 5 : 1)
         .attr("stroke", "#C7CC56")
     })
   })
