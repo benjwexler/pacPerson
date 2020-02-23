@@ -53,10 +53,8 @@ domReady(function () {
   const createInterval = () => {
     let { invincibleTimer } = ghosts;
     invincibleTimer < 0 ? invincibleTimer = 0 : invincibleTimer += 5;
-    document.getElementById('timer').innerText = invincibleTimer;
     invincibleInterval = setInterval(function () {
       invincibleTimer -= 1;
-      document.getElementById('timer').innerText = invincibleTimer;
       if (invincibleTimer <= 0) {
         invincibleTimer = 0;
         ghosts.invincibleTimer = invincibleTimer;
