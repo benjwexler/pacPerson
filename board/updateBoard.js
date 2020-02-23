@@ -1,15 +1,20 @@
-
-const update = ({
-  circleRadius,
-  rectData,
-  cellHeight,
-  cellWidth,
+import getCircleRadius from "./getCircleRadius.js";
+import {
+  numCols,
+  numRows,
+  cellHeightPercentageInt as cellHeight,
+  cellWidthPercentageInt as cellWidth,
   borderDataHorizontalMatrix,
   borderDataVerticalMatrix,
-  score,
-}) => {
-  var selection = d3.select("#crack")
-    .selectAll(".rect").data(rectData, (d) => d.count)
+} from '../constants.js';
+
+const updateBoard = ({
+  dimensions,
+}, dots) => {
+  const {boardDimensions} = dimensions;
+  const circleRadius = getCircleRadius(boardDimensions);
+  var selection = d3.select("#board")
+    .selectAll(".rect").data(dots, (d) => d.count)
     .attr('x', 0)
     .attr('y', 0)
     .classed('cell', true)
@@ -17,7 +22,7 @@ const update = ({
     .attr('height', '100%')
     .attr('width', '100%')
 
-  const circles = d3.select("#crack").selectAll(".circle").data(rectData, (d) => d.count)
+  const circles = d3.select("#board").selectAll(".circle").data(dots, (d) => d.count)
     .attr('cx', '50%')
     .attr('cy', '50%')
     .attr('r', d => `${!d.special ? circleRadius : circleRadius * 2}%`)
@@ -55,7 +60,7 @@ const update = ({
     row.forEach((piece, i) => {
       if (!piece.hasBorder) return;
       if (!row[i + 1]) { return }
-      d3.select("#crack").append("line")
+      d3.select("#board").append("line")
         .attr("x1", `${piece.x}%`)
         .attr("y1", `${piece.y}%`)
         .attr("x2", `${row[i + 1].x}%`)
@@ -69,7 +74,7 @@ const update = ({
     row.forEach((piece, i) => {
       if (!piece.hasBorder) return;
       if (!row[i + 1]) { return }
-      d3.select("#crack").append("line")
+      d3.select("#board").append("line")
         .attr("x1", `${piece.x}%`)
         .attr("y1", `${piece.y}%`)
         .attr("x2", `${piece.x}%`)
@@ -79,7 +84,7 @@ const update = ({
     })
   })
 
-  document.getElementById('score').innerText = score;
+  // document.getElementById('score').innerText = score;
 };
 
-export default update;
+export default updateBoard;

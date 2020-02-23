@@ -1,6 +1,6 @@
 
 const getPacmanRadius = () => {
-const circleSize = document.querySelector('.circle').getBoundingClientRect()
+const circleSize = document.querySelector('.circle').getBoundingClientRect();
   let circleWidth = circleSize.width;
   let circleHeight = circleSize.height
   let _circleDiameter = circleWidth < circleHeight ? circleWidth : circleHeight;

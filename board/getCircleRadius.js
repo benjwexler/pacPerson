@@ -1,7 +1,6 @@
 
-const getCircleRadius = () => {
-  const elementSize = document.getElementById("crack").getBoundingClientRect();
-  const diameter = elementSize.width < elementSize.height ? elementSize.width : elementSize.height;
+const getCircleRadius = (dimensions) => {
+  const diameter = dimensions.width < dimensions.height ? dimensions.width : dimensions.height;
   let circleRadius = diameter / 80;
   return circleRadius;
 };
