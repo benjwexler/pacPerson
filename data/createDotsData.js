@@ -2,7 +2,7 @@
 import generateNoCircleCoords from './generateNoCircleCoords.js'
 import getSpecialCoords from './getSpecialCoords.js';
 
-const createRectData = (_cellWidth, _cellHeight, numCols) => {
+const createDotsData = (_cellWidth, _cellHeight, numCols) => {
   const specialCoords = getSpecialCoords(numCols);
   const rectData = [];
   const noCircleCoords = generateNoCircleCoords();
@@ -36,4 +36,4 @@ const createRectData = (_cellWidth, _cellHeight, numCols) => {
   return rectData;
 }
 
-export default createRectData;
+export default createDotsData;

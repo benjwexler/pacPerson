@@ -1,10 +1,10 @@
 
 const getRotateAmount = (_currentKeycode) => {
     const rotateObj = {
-      37: 0,
-      38: 90,
-      39: 180,
-      40: 270,
+      1: 0,
+      2: 90,
+      3: 180,
+      4: 270,
     }
     return rotateObj[_currentKeycode]
   };
