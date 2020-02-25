@@ -5,5 +5,5 @@ Run `python -m SimpleHTTPServer [port]`
 
 Known Issues:
 
-* Function `updateBorder` is constantly appending new lines that create the border walls on every update:
+* Function `updateBorder` is constantly appending new lines that create the border walls on every update causing an ever expanding number of dom nodes that is causing a serious performance issue:
   https://github.com/benjwexler/pacPerson/issues/17
