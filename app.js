@@ -21,6 +21,7 @@ import setCoordsAllGhosts from "./ghost/setCoordsAllGhosts.js";
 import checkCollision from "./ghost/checkCollision.js";
 import resetGhostCoords from "./ghost/resetGhostCoords.js";
 import animateSpecialDots from "./board/animateSpecialDots.js";
+import updateBorders from "./board/updateBorders.js";
 
 var domReady = function (callback) {
   document.readyState === "interactive" || document.readyState === "complete" ? callback() : document.addEventListener("DOMContentLoaded", callback);
@@ -71,6 +72,7 @@ domReady(function () {
   let boardInfo = { dimensions }
   updateBoardDimensionsOnResize(boardInfo, numCols, numRows);
   updateBoard(boardInfo, dots)
+  updateBorders()
   animateSpecialDots()
   let pacman = getPacman();
 
