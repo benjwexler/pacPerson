@@ -1262,7 +1262,7 @@
 
       wasCollisionDetected = checkCollision(pacman.coords, ghosts);
 
-    }, 140);
+    }, 175);
   });
 
 }());
