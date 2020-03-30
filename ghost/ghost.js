@@ -15,7 +15,9 @@ class Ghost {
 export let ghost1 = new Ghost(1, 'purple');
 export let ghost2 = new Ghost(2, 'blue');
 export let ghost3 = new Ghost(3, 'green');
-export let ghost4 = new Ghost(4, 'pink');
+export let ghost4 = new Ghost(4, '#FF7E00');
+export let ghost5 = new Ghost(5, '#DE5D83');
+export let ghost6 = new Ghost(6, '#3B7A57');
 
 class Ghosts {
   constructor(ghosts) {
@@ -24,8 +26,5 @@ class Ghosts {
   }
 }
 
-// ghost(3, 'green');
-// ghost(4, 'pink');
-
-export let ghosts = new Ghosts([ghost1, ghost2, ghost3, ghost4]);
+export let ghosts = new Ghosts([ghost1, ghost2, ghost3, ghost4, ghost5, ghost6]);
 

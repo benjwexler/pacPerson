@@ -539,7 +539,9 @@
   let ghost1 = new Ghost(1, 'purple');
   let ghost2 = new Ghost(2, 'blue');
   let ghost3 = new Ghost(3, 'green');
-  let ghost4 = new Ghost(4, 'pink');
+  let ghost4 = new Ghost(4, '#FF7E00');
+  let ghost5 = new Ghost(5, '#DE5D83');
+  let ghost6 = new Ghost(6, '#3B7A57');
 
   class Ghosts {
     constructor(ghosts) {
@@ -548,10 +550,7 @@
     }
   }
 
-  // ghost(3, 'green');
-  // ghost(4, 'pink');
-
-  let ghosts = new Ghosts([ghost1, ghost2, ghost3, ghost4]);
+  let ghosts = new Ghosts([ghost1, ghost2, ghost3, ghost4, ghost5, ghost6]);
 
   const getPacman = () => {
       return {
