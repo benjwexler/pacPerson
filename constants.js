@@ -19,6 +19,7 @@ export const getMainSvg = () => {
     .attr("width", '100%')
     .attr("height", '100%')
     .style('overflow', 'visible')
+    
 }
 
 export const mainSvg = getMainSvg();

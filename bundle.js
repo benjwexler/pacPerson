@@ -256,7 +256,7 @@
         }
 
       };
-
+      addNoCircleCoords(0, 0, 0, 0);
       addNoCircleCoords(1, 1, 2, 2);
       addNoCircleCoords(4, 1, 6, 2);
       addNoCircleCoords(8, 0, 8, 2);
@@ -352,6 +352,7 @@
       .attr("width", '100%')
       .attr("height", '100%')
       .style('overflow', 'visible')
+      
   };
 
   const mainSvg = getMainSvg();
@@ -460,6 +461,7 @@
         .attr("width", '100%')
         .attr("height", '100%')
         .style('overflow', 'visible');
+        
 
       const xTranslate = (coords.x * cellWidthPercentageInt) + cellWidthPercentageInt / 2;
       const yTranslate = (coords.y * cellHeightPercentageInt) + cellHeightPercentageInt / 2;
@@ -1213,18 +1215,18 @@
       }
     };
 
-    let svgs = updateAllGhosts(ghosts, boardInfo.dimensions);
-    updateAllLegs(ghosts, boardInfo, svgs);
-
     let wasCollisionDetected = false;
     let ghostsCanMove = true;
 
     setInterval(() => {
-      if(!dots.length) return alert("CONGRATS! YOU WON!");
+      if (!dots.length) return alert("CONGRATS! YOU WON!");
       ghostsCanMove = !ghostsCanMove;
       if (wasCollisionDetected) {
-        alert("OVER");
         lives -= 1;
+        if (lives) {
+          alert(`Uh-Oh, you have ${lives} lives remaining`);
+        }
+
         if (!lives) {
           alert("YOU LOST");
           return location.reload();
@@ -1263,6 +1265,17 @@
       wasCollisionDetected = checkCollision(pacman.coords, ghosts);
 
     }, 160);
+
+    d3.selection.prototype.moveToFront = function () {
+      return this.each(function () {
+        this.parentNode.appendChild(this);
+      });
+    };
+
+    mainSvg.moveToFront();
+    let svgs = updateAllGhosts(ghosts, boardInfo.dimensions);
+    updateAllLegs(ghosts, boardInfo, svgs);
+
   });
 
 }());

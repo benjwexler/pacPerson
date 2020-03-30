@@ -46,6 +46,7 @@ const updatePacman = ({
       .attr("width", '100%')
       .attr("height", '100%')
       .style('overflow', 'visible')
+      
 
     const xTranslate = (coords.x * cellWidthPercentageInt) + cellWidthPercentageInt / 2;
     const yTranslate = (coords.y * cellHeightPercentageInt) + cellHeightPercentageInt / 2;
