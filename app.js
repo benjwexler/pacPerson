@@ -135,18 +135,18 @@ domReady(function () {
     }
   }
 
-  let svgs = updateAllGhosts(ghosts, boardInfo.dimensions)
-  updateAllLegs(ghosts, boardInfo, svgs)
-
   let wasCollisionDetected = false;
   let ghostsCanMove = true;
 
   setInterval(() => {
-    if(!dots.length) return alert("CONGRATS! YOU WON!");
+    if (!dots.length) return alert("CONGRATS! YOU WON!");
     ghostsCanMove = !ghostsCanMove;
     if (wasCollisionDetected) {
-      alert("OVER")
       lives -= 1;
+      if (lives) {
+        alert(`Uh-Oh, you have ${lives} lives remaining`)
+      }
+
       if (!lives) {
         alert("YOU LOST")
         return location.reload();
@@ -185,4 +185,15 @@ domReady(function () {
     wasCollisionDetected = checkCollision(pacman.coords, ghosts)
 
   }, 160)
+
+  d3.selection.prototype.moveToFront = function () {
+    return this.each(function () {
+      this.parentNode.appendChild(this);
+    });
+  };
+
+  mainSvg.moveToFront();
+  let svgs = updateAllGhosts(ghosts, boardInfo.dimensions);
+  updateAllLegs(ghosts, boardInfo, svgs);
+
 });
